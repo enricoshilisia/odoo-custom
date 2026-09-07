@@ -1,6 +1,6 @@
 {
     'name': 'CPS Interview Scoring',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Recruitment',
     'summary': 'Panel-based interview scoring for job candidates',
     'author': 'CPS',

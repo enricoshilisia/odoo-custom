@@ -1,6 +1,7 @@
 {
     'name': 'CPS: Job JD PDF Download',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
+    'author': 'Cloud Productivity Solutions',
     'category': 'Recruitment',
     'summary': 'Attach a JD PDF to any job position; show download button on website and shareable link',
     'depends': ['hr_recruitment', 'website_hr_recruitment'],

@@ -1,6 +1,7 @@
 {
     'name': 'CPS: Hide Survey Score from Candidates',
-    'version': '18.0.1.1.0',
+    'version': '19.0.1.1.0',
+    'author': 'Cloud Productivity Solutions',
     'category': 'Survey',
     'summary': 'Hides score from candidates; customises recruitment application form',
     'depends': ['survey', 'website_hr_recruitment'],

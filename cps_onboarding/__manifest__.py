@@ -1,6 +1,6 @@
 {
     'name': 'CPS Employee Onboarding',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Human Resources',
     'summary': 'Structured reusable onboarding plans for any job role',
     'description': """
