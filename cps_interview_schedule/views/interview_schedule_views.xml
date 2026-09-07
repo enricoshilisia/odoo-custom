@@ -125,8 +125,8 @@
                 <field name="date"/>
                 <field name="state"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_card oe_kanban_global_click" style="padding:10px;">
+                    <t t-name="card">
+                        <div style="padding:10px;">
                             <div style="font-weight:bold;font-size:14px;">
                                 <field name="candidate_name"/>
                             </div>
