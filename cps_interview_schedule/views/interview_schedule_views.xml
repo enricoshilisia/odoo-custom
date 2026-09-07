@@ -131,10 +131,10 @@
                                 <field name="candidate_name"/>
                             </div>
                             <div style="color:#666;font-size:12px;margin-top:4px;">
-                                <i class="fa fa-calendar"/> <field name="date"/>
+                                <i class="fa fa-calendar" title="Date"/> <field name="date"/>
                             </div>
                             <div style="color:#666;font-size:12px;">
-                                <i class="fa fa-clock-o"/> <field name="time_label"/>
+                                <i class="fa fa-clock-o" title="Time"/> <field name="time_label"/>
                             </div>
                             <div style="margin-top:6px;">
                                 <span class="badge text-bg-success" t-if="record.candidate_score.raw_value">
