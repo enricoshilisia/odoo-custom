@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cps_recruitment_form_inherit"
+              name="CPS: CV and Application Letter upload instruction"
+              inherit_id="website_hr_recruitment.apply">
+
+        <!-- Rename Resume label -->
+        <xpath expr="//label[@for='recruitment6']//span[@class='s_website_form_label_content']"
+               position="replace">
+            <span class="s_website_form_label_content">CV &amp; Application Letter</span>
+            <span class="s_website_form_mark"> *</span>
+        </xpath>
+
+        <!-- Replace help text and make field required -->
+        <xpath expr="//input[@id='recruitment6']" position="replace">
+            <input id="recruitment6" type="file"
+                class="form-control s_website_form_input o_resume_input"
+                name="Resume"
+                required="required"
+                accept=".pdf,.doc,.docx"/>
+            <span class="text-muted small d-block mt-1">
+                <strong>Important:</strong> Upload a <strong>single document</strong> combining
+                your <strong>Application Letter</strong> (first page) and
+                <strong>CV</strong> (subsequent pages). PDF format preferred.
+            </span>
+        </xpath>
+
+    </template>
+</odoo>

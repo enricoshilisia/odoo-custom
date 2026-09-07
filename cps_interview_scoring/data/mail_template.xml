@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="email_template_panelist_scoring" model="mail.template">
+        <field name="name">Interview Scoring Invitation</field>
+        <field name="model_id" ref="model_cps_interview_token"/>
+        <field name="subject">Interview Scoring: {{ object.session_id.name }}</field>
+        <field name="email_to">{{ object.user_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin:0px;padding:0px;font-size:13px;font-family:Arial,sans-serif;">
+                <p>Dear <t t-out="object.user_id.name"/>,</p>
+                <p>You have been invited to score candidates for the following interview session:</p>
+                <table style="background:#f9f9f9;border-radius:6px;padding:15px;margin:15px 0;width:100%;">
+                    <tr>
+                        <td style="padding:5px;color:#666;width:40%;"><strong>Session:</strong></td>
+                        <td style="padding:5px;"><t t-out="object.session_id.name"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;color:#666;"><strong>Job Position:</strong></td>
+                        <td style="padding:5px;"><t t-out="object.session_id.job_id.name"/></td>
+                    </tr>
+                </table>
+                <p>Please click the button below to submit your scores:</p>
+                <div style="text-align:center;margin:25px 0;">
+                    <a t-att-href="object.scoring_url"
+                       style="background-color:#27ae60;color:#ffffff;padding:12px 30px;border-radius:5px;text-decoration:none;font-size:15px;font-weight:bold;">
+                        Score Candidates
+                    </a>
+                </div>
+                <p style="color:#e74c3c;font-size:13px;">
+                    This link is unique to you. Do not share it with anyone.
+                </p>
+                <hr style="border:none;border-top:1px solid #eee;margin:20px 0;"/>
+                <p style="color:#888;font-size:12px;">
+                    Regards,<br/>
+                    <strong>HR Team</strong>
+                </p>
+            </div>
+        </field>
+    </record>
+
+</odoo>

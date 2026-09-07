@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_cps_graph" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.cps.graph</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="CPS Graph" string="CPS Graph" name="cps_ms_graph"
+                         logo="/cps_ms_graph/static/description/icon.png">
+
+                        <block title="Microsoft Graph API"
+                               name="cps_graph_credentials">
+
+                            <setting string="Directory (tenant) ID"
+                                     help="Entra ID app registration overview page.">
+                                <field name="cps_graph_tenant_id"
+                                       placeholder="00000000-0000-0000-0000-000000000000"/>
+                            </setting>
+
+                            <setting string="Application (client) ID"
+                                     help="Entra ID app registration overview page.">
+                                <field name="cps_graph_client_id"
+                                       placeholder="00000000-0000-0000-0000-000000000000"/>
+                            </setting>
+
+                            <setting string="Client secret"
+                                     help="Paste the secret VALUE, not the Secret ID. Microsoft shows it only once.">
+                                <field name="cps_graph_client_secret" password="True"/>
+                            </setting>
+
+                            <setting string="Organizer account"
+                                     help="Mailbox that organizes Teams meetings. Must be granted the Teams application access policy.">
+                                <field name="cps_graph_organizer_upn"
+                                       placeholder="erp@cloudproductivity-solutions.com"/>
+                            </setting>
+
+                            <setting string="Test connection"
+                                     help="Requests a token and resolves the organizer account. Values do not need to be saved first.">
+                                <button name="action_cps_graph_test_connection"
+                                        type="object"
+                                        string="Test Connection"
+                                        class="btn-primary"/>
+                            </setting>
+
+                        </block>
+
+                        <block title="Required app permissions"
+                               name="cps_graph_reference">
+                            <setting string="Application permissions"
+                                     help="Calendars.ReadWrite, OnlineMeetings.ReadWrite.All, OnlineMeetingArtifact.Read.All, User.Read.All. All Application type, all admin-consented.">
+                            </setting>
+                            <setting string="Teams access policy"
+                                     help="Application permissions alone are not enough for meeting APIs. A Teams application access policy must be created and granted to the organizer account via Teams PowerShell.">
+                            </setting>
+                        </block>
+
+                    </app>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

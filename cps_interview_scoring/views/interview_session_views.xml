@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_interview_session_form" model="ir.ui.view">
+        <field name="name">cps.interview.session.form</field>
+        <field name="model">cps.interview.session</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_session"
+                            string="Open Session &amp; Send Links"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_close_session"
+                            string="Close Session"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'open'"/>
+                    <button name="action_reset_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            invisible="state != 'closed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,open,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"
+                                   placeholder="e.g. Finance Officer Interview – May 2026"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="job_id"/>
+                            <field name="interview_date"/>
+                            <field name="deadline"/>
+                        </group>
+                        <group>
+                            <field name="total_panelists" string="Total Panelists"/>
+                            <field name="submitted_count" string="Panelists Submitted"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Candidates">
+                            <button name="action_load_candidates"
+                                    string="Load from Interview Stage"
+                                    type="object"
+                                    class="btn-secondary mb-2"
+                                    invisible="state != 'draft'"/>
+                            <field name="applicant_ids" widget="many2many">
+                                <list>
+                                    <field name="partner_name" string="Candidate Name"/>
+                                    <field name="stage_id"/>
+                                    <field name="job_id"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Interviewed (Ready to Score)">
+                            <div class="alert alert-info" role="status">
+                                Tick candidates here once they have actually been interviewed.
+                                Panelists will only see these on their scoring page. You can add
+                                more across several days &#8212; panelists' links stay live until
+                                everyone here has been scored.
+                            </div>
+                            <field name="interviewed_applicant_ids" widget="many2many_tags"
+                                   options="{'no_create': True}"
+                                   domain="[('id','in',applicant_ids)]"/>
+                        </page>
+                        <page string="Panelists">
+                            <field name="panelist_ids" widget="many2many_tags"/>
+                        </page>
+
+                        <page string="Questions">
+                            <field name="question_ids">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" string="Question"/>
+                                    <field name="max_score"/>
+                                    <field name="scoring_guide" string="Look For" optional="show"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="sequence"/>
+                                        <field name="name" string="Question"/>
+                                        <field name="max_score"/>
+                                    </group>
+                                    <group string="Look For / Scoring Guide">
+                                        <field name="scoring_guide" nolabel="1"
+                                               placeholder="What panelists should assess for this question..."/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Scoring Links">
+                            <field name="token_ids" options="{'no_create': True}">
+                                <list create="0" delete="0">
+                                    <field name="user_id" string="Panelist"/>
+                                    <field name="state"/>
+                                    <field name="submitted_date"/>
+                                    <field name="scoring_url" string="Scoring Link" widget="url"/>
+                                    <button name="action_resend_email"
+                                            string="Resend Email"
+                                            type="object"
+                                            icon="fa-envelope"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Candidate Responses">
+                            <button name="action_send_candidate_forms"
+                                    string="Send Forms to Candidates"
+                                    type="object"
+                                    class="btn-primary mb-3"
+                                    invisible="state == 'draft'"/>
+                            <field name="candidate_token_ids">
+                                <list>
+                                    <field name="applicant_id" string="Candidate"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'submitted'"
+                                           decoration-warning="state == 'pending'"/>
+                                    <field name="submitted_date"/>
+                                    <field name="form_url" string="Form Link" widget="url"/>
+                                    <button name="action_resend_email"
+                                            string="Resend"
+                                            type="object"
+                                            icon="fa-envelope"/>
+                                </list>
+                            </field>
+                            <separator string="Responses"/>
+                            <field name="candidate_response_ids">
+                                <list>
+                                    <field name="applicant_id" string="Candidate"/>
+                                    <field name="emoji_rating"/>
+                                    <field name="availability" string="Available From"/>
+                                    <field name="submitted_date"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Panel Overall Scores">
+                            <div class="alert alert-info" role="status">
+                                Overall panel scores recorded from the panel's own records.
+                            </div>
+                            <field name="overall_ids">
+                                <list editable="bottom">
+                                    <field name="applicant_id"/>
+                                    <field name="overall_score"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Final Evaluation">
+                            <button name="action_generate_evaluations" type="object"
+                                    string="Generate Evaluation Rows" class="btn-primary"
+                                    icon="fa-list-alt"/>
+                            <field name="evaluation_ids">
+                                <list editable="bottom">
+                                    <field name="candidate_name" readonly="1"/>
+                                    <field name="current_salary"/>
+                                    <field name="expected_salary"/>
+                                    <field name="notice_period"/>
+                                    <field name="hr_recommendation"/>
+                                    <field name="final_decision"/>
+                                    <field name="recruiter_comments"/>
+                                    <field name="panel_comments"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Results">
+                            <button name="action_view_results"
+                                    string="Download PDF Report"
+                                    type="object"
+                                    class="btn-primary mb-3"
+                                    invisible="state == 'draft'"/>
+                            <field name="results_html"
+                                   invisible="state == 'draft'"
+                                   readonly="1"
+                                   widget="html"/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_interview_session_list" model="ir.ui.view">
+        <field name="name">cps.interview.session.list</field>
+        <field name="model">cps.interview.session</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="job_id"/>
+                <field name="interview_date"/>
+                <field name="total_panelists"/>
+                <field name="submitted_count"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'closed'"
+                       decoration-warning="state == 'open'"
+                       decoration-muted="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_interview_session_search" model="ir.ui.view">
+        <field name="name">cps.interview.session.search</field>
+        <field name="model">cps.interview.session</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="job_id"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Open" name="open" domain="[('state','=','open')]"/>
+                <filter string="Closed" name="closed" domain="[('state','=','closed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Job Position" name="group_job" context="{'group_by':'job_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_interview_session" model="ir.actions.act_window">
+        <field name="name">Interview Sessions</field>
+        <field name="res_model">cps.interview.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_interview_session_search"/>
+    </record>
+
+</odoo>

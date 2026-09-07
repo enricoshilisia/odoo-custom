@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_interview_schedule_mgr,interview.schedule.mgr,model_cps_interview_schedule,hr.group_hr_manager,1,1,1,1
+access_interview_schedule_user,interview.schedule.user,model_cps_interview_schedule,hr.group_hr_user,1,1,1,0
+access_interview_slot_mgr,interview.slot.mgr,model_cps_interview_slot,hr.group_hr_manager,1,1,1,1
+access_interview_slot_user,interview.slot.user,model_cps_interview_slot,hr.group_hr_user,1,1,1,0

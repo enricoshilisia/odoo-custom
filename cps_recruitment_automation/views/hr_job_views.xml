@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view for survey config -->
+    <record id="cps_recruitment_survey_config_view_form" model="ir.ui.view">
+        <field name="name">cps.recruitment.survey.config.form</field>
+        <field name="model">cps.recruitment.survey.config</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="stage_id"/>
+                        <field name="survey_id"/>
+                        <field name="passing_score"/>
+                        <field name="on_pass_stage_id"/>
+                        <field name="is_manual"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List view for survey config -->
+    <record id="cps_recruitment_survey_config_view_list" model="ir.ui.view">
+        <field name="name">cps.recruitment.survey.config.list</field>
+        <field name="model">cps.recruitment.survey.config</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="stage_id"/>
+                <field name="survey_id"/>
+                <field name="passing_score"/>
+                <field name="on_pass_stage_id"/>
+                <field name="is_manual"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Inject tab into job position form -->
+    <record id="hr_job_view_form_survey" model="ir.ui.view">
+        <field name="name">hr.job.form.survey.config</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Recruitment Surveys" name="recruitment_surveys">
+                    <field name="survey_config_ids" mode="list">
+                        <list>
+                            <field name="sequence" widget="handle"/>
+                            <field name="stage_id"/>
+                            <field name="survey_id"/>
+                            <field name="passing_score"/>
+                            <field name="on_pass_stage_id"/>
+                            <field name="is_manual"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_onboarding_progress_report" model="ir.actions.report">
+        <field name="name">Onboarding Progress Report</field>
+        <field name="model">cps.onboarding.plan</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cps_onboarding.report_onboarding_progress</field>
+        <field name="report_file">cps_onboarding.report_onboarding_progress</field>
+        <field name="binding_model_id" ref="model_cps_onboarding_plan"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_onboarding_progress">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="plan">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family:Arial,sans-serif;font-size:13px;">
+                        <h2 style="color:#1a1a2e;">Onboarding Progress Report</h2>
+                        <h3 style="color:#0f3460;margin-top:4px;"><t t-esc="plan.name"/></h3>
+
+                        <table style="width:100%;margin:12px 0;border-collapse:collapse;">
+                            <tr>
+                                <td style="width:25%;color:#666;padding:4px 0;"><strong>Employee:</strong></td>
+                                <td style="padding:4px 0;"><t t-esc="plan.employee_id.name"/></td>
+                                <td style="width:25%;color:#666;padding:4px 0;"><strong>Start Date:</strong></td>
+                                <td style="padding:4px 0;"><t t-esc="plan.start_date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#666;padding:4px 0;"><strong>Job Position:</strong></td>
+                                <td style="padding:4px 0;"><t t-esc="plan.job_id.name or '-'"/></td>
+                                <td style="color:#666;padding:4px 0;"><strong>Status:</strong></td>
+                                <td style="padding:4px 0;"><t t-esc="plan.state"/></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#666;padding:4px 0;"><strong>Progress:</strong></td>
+                                <td style="padding:4px 0;">
+                                    <t t-esc="plan.done_tasks"/> / <t t-esc="plan.total_tasks"/> tasks
+                                    (<t t-esc="plan.progress_pct"/>%)
+                                </td>
+                                <td style="color:#666;padding:4px 0;"><strong>Overdue:</strong></td>
+                                <td style="padding:4px 0;color:#e74c3c;">
+                                    <t t-esc="plan.overdue_tasks"/> task(s)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#666;padding:4px 0;"><strong>Current Phase:</strong></td>
+                                <td colspan="3" style="padding:4px 0;"><t t-esc="plan.current_phase"/></td>
+                            </tr>
+                        </table>
+
+                        <t t-set="phases" t-value="[
+                            ('preboarding', 'Pre-Boarding'),
+                            ('phase1', 'Phase 1: Foundation (Days 1-30)'),
+                            ('phase2', 'Phase 2: Assessment (Days 31-60)'),
+                            ('phase3', 'Phase 3: Execution (Days 61-90)'),
+                        ]"/>
+
+                        <t t-foreach="phases" t-as="ph">
+                            <t t-set="ph_tasks" t-value="plan.task_ids.filtered(lambda t: t.phase == ph[0])"/>
+                            <t t-if="ph_tasks">
+                                <h4 style="background:#1a1a2e;color:#fff;padding:8px 12px;margin:16px 0 0;border-radius:4px;">
+                                    <t t-esc="ph[1]"/>
+                                    &#160;&#160;
+                                    <span style="font-weight:normal;font-size:11px;opacity:0.7;">
+                                        <t t-esc="len(ph_tasks.filtered(lambda t: t.state == 'done'))"/>
+                                        / <t t-esc="len(ph_tasks)"/> done
+                                    </span>
+                                </h4>
+                                <table style="width:100%;border-collapse:collapse;">
+                                    <thead>
+                                        <tr style="background:#f0f2f5;">
+                                            <th style="padding:7px 10px;text-align:left;font-size:11px;">Task</th>
+                                            <th style="padding:7px 10px;text-align:left;font-size:11px;">Assigned To</th>
+                                            <th style="padding:7px 10px;text-align:center;font-size:11px;">Due</th>
+                                            <th style="padding:7px 10px;text-align:center;font-size:11px;">Status</th>
+                                            <th style="padding:7px 10px;text-align:center;font-size:11px;">Completed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="ph_tasks" t-as="task">
+                                            <t t-set="row_bg" t-value="'#eafaf1' if task.state == 'done' else ('#fff5f5' if task.state == 'overdue' else '#fff')"/>
+                                            <tr t-att-style="'background:' + row_bg + ';border-bottom:1px solid #eee;'">
+                                                <td style="padding:7px 10px;font-size:12px;">
+                                                    <t t-esc="task.name"/>
+                                                </td>
+                                                <td style="padding:7px 10px;font-size:11px;color:#666;">
+                                                    <t t-esc="task.assigned_user_id.name or task.assignee_role or '-'"/>
+                                                </td>
+                                                <td style="padding:7px 10px;text-align:center;font-size:11px;">
+                                                    <t t-esc="task.due_date or '-'"/>
+                                                </td>
+                                                <td style="padding:7px 10px;text-align:center;font-size:11px;font-weight:bold;">
+                                                    <t t-if="task.state == 'done'">
+                                                        <span style="color:#27ae60;">&#10003; Done</span>
+                                                    </t>
+                                                    <t t-elif="task.state == 'overdue'">
+                                                        <span style="color:#e74c3c;">Overdue</span>
+                                                    </t>
+                                                    <t t-elif="task.state == 'in_progress'">
+                                                        <span style="color:#f39c12;">In Progress</span>
+                                                    </t>
+                                                    <t t-elif="task.state == 'skipped'">
+                                                        <span style="color:#aaa;">Skipped</span>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span style="color:#aaa;">Pending</span>
+                                                    </t>
+                                                </td>
+                                                <td style="padding:7px 10px;text-align:center;font-size:11px;color:#666;">
+                                                    <t t-esc="task.completed_date or '-'"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </t>
+
+                        <div style="margin-top:24px;padding:12px;background:#f9f9f9;border-radius:4px;font-size:11px;color:#888;">
+                            Report generated for <t t-esc="plan.employee_id.name"/> &#183;
+                            <t t-esc="plan.name"/> &#183; HR Team
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

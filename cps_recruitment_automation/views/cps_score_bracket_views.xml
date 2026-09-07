@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Score Bracket list view -->
+    <record id="cps_score_bracket_list" model="ir.ui.view">
+        <field name="name">cps.score.bracket.list</field>
+        <field name="model">cps.score.bracket</field>
+        <field name="arch" type="xml">
+            <list string="Score Brackets" editable="bottom">
+                <field name="label"/>
+                <field name="min_score"/>
+                <field name="max_score"/>
+                <field name="stage_id"/>
+                <field name="survey_state"/>
+                <field name="notify_hr"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Score Bracket form view -->
+    <record id="cps_score_bracket_form" model="ir.ui.view">
+        <field name="name">cps.score.bracket.form</field>
+        <field name="model">cps.score.bracket</field>
+        <field name="arch" type="xml">
+            <form string="Score Bracket">
+                <sheet>
+                    <group>
+                        <group string="Bracket Details">
+                            <field name="label"/>
+                            <field name="min_score"/>
+                            <field name="max_score"/>
+                        </group>
+                        <group string="Recruitment Action">
+                            <field name="stage_id"/>
+                            <field name="survey_state"/>
+                            <field name="notify_hr"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Extend Survey form — add Score Brackets tab -->
+    <record id="survey_form_cps_brackets" model="ir.ui.view">
+        <field name="name">survey.form.cps.brackets</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Score Brackets" name="cps_score_brackets">
+                    <div class="alert alert-info" role="alert">
+                        <strong>How to configure:</strong>
+                        Define score ranges and which recruitment stage candidates move to.
+                        Brackets are evaluated after all scores including manual are finalized.
+                        Ensure ranges cover 0–100 without gaps.
+                    </div>
+                    <field name="cps_score_bracket_ids" nolabel="1">
+                        <list string="Score Brackets" editable="bottom">
+                            <field name="label"/>
+                            <field name="min_score"/>
+                            <field name="max_score"/>
+                            <field name="stage_id"/>
+                            <field name="survey_state"/>
+                            <field name="notify_hr"/>
+                        </list>
+                    </field>
+                    <group string="GM Notification Settings">
+                        <field name="cps_notify_hr_on_config"/>
+                        <field name="cps_hr_manager_email"
+                               invisible="not cps_notify_hr_on_config"
+                               help="Leave blank to auto-detect from General Manager employee record."/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

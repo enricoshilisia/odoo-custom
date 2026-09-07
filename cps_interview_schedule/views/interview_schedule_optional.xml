@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Smart button / action on the session to jump to its schedule -->
+    <record id="view_interview_session_form_schedule" model="ir.ui.view">
+        <field name="name">cps.interview.session.form.schedule</field>
+        <field name="model">cps.interview.session</field>
+        <field name="inherit_id" ref="cps_interview_scoring.view_interview_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="%(action_interview_schedule)d" type="action"
+                        string="Interview Schedule" class="btn-secondary"
+                        context="{'default_session_id': active_id,
+                                  'search_default_session_id': active_id}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menu under Recruitment -->
+    <menuitem id="menu_interview_schedule"
+              name="Interview Schedules"
+              parent="hr_recruitment.menu_hr_recruitment_root"
+              action="action_interview_schedule"
+              sequence="90"/>
+
+
+</odoo>

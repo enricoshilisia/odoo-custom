@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Template Form -->
+    <record id="view_onboarding_template_form" model="ir.ui.view">
+        <field name="name">cps.onboarding.template.form</field>
+        <field name="model">cps.onboarding.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_plan" string="Create Plan from This Template"
+                            type="object" class="btn-primary"/>
+                    <button name="action_duplicate" string="Duplicate Template"
+                            type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_create_plan">
+                            <div class="o_stat_info">
+                                <field name="total_tasks" class="o_stat_value"/>
+                                <span class="o_stat_text">Tasks</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-calendar">
+                            <div class="o_stat_info">
+                                <field name="duration_days" class="o_stat_value"/>
+                                <span class="o_stat_text">Days</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. HR Manager 90-Day Onboarding"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="job_id"/>
+                            <field name="department_id"/>
+                        </group>
+                        <group>
+                            <field name="total_phases" string="Phases"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Notes about this template..."/>
+                    <notebook>
+                        <page string="Tasks">
+                            <field name="task_template_ids">
+                                <list editable="bottom" default_order="phase,day_offset">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="phase"/>
+                                    <field name="day_offset" string="Due (Day #)"/>
+                                    <field name="name" string="Task Title"/>
+                                    <field name="assignee_role"/>
+                                    <field name="odoo_module" string="Module"/>
+                                    <field name="is_employee_visible" string="Employee Visible"/>
+                                    <field name="requires_document" string="Needs Upload"/>
+                                    <field name="send_reminder" string="Reminder"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Template List -->
+    <record id="view_onboarding_template_list" model="ir.ui.view">
+        <field name="name">cps.onboarding.template.list</field>
+        <field name="model">cps.onboarding.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="job_id"/>
+                <field name="department_id"/>
+                <field name="total_tasks"/>
+                <field name="total_phases"/>
+                <field name="duration_days" string="Duration (Days)"/>
+                <field name="active" widget="boolean_toggle"/>
+                <button name="action_create_plan" string="Create Plan"
+                        type="object" class="btn-secondary btn-sm"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Template Search -->
+    <record id="view_onboarding_template_search" model="ir.ui.view">
+        <field name="name">cps.onboarding.template.search</field>
+        <field name="model">cps.onboarding.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="job_id"/>
+                <field name="department_id"/>
+                <filter string="Active" name="active" domain="[('active','=',True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Job Position" name="grp_job" context="{'group_by':'job_id'}"/>
+                    <filter string="Department" name="grp_dept" context="{'group_by':'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Template Action -->
+    <record id="action_onboarding_template" model="ir.actions.act_window">
+        <field name="name">Onboarding Templates</field>
+        <field name="res_model">cps.onboarding.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_onboarding_template_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+</odoo>

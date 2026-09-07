@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_onboarding_root"
+              name="Onboarding"
+              sequence="96"
+              web_icon="cps_onboarding,static/description/icon.png"/>
+
+    <menuitem id="menu_onboarding_plans"
+              name="Onboarding Plans"
+              parent="menu_onboarding_root"
+              action="action_onboarding_plan"
+              sequence="10"/>
+
+    <menuitem id="menu_onboarding_active"
+              name="Active Plans"
+              parent="menu_onboarding_root"
+              action="action_onboarding_plan_active"
+              sequence="15"/>
+
+    <menuitem id="menu_onboarding_tasks"
+              name="Tasks"
+              parent="menu_onboarding_root"
+              action="action_onboarding_task_by_phase"
+              sequence="18"/>
+
+    <menuitem id="menu_onboarding_templates"
+              name="Templates"
+              parent="menu_onboarding_root"
+              action="action_onboarding_template"
+              sequence="20"/>
+
+</odoo>

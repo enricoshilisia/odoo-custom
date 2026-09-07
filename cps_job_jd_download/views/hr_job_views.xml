@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_view_form_jd" model="ir.ui.view">
+        <field name="name">hr.job.form.jd.pdf</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Job Description PDF" name="jd_pdf_group">
+                    <field name="jd_pdf" filename="jd_pdf_filename"
+                           widget="binary"
+                           help="Upload a PDF combining the full job description. Candidates will see a Download button on the job page."/>
+                    <field name="jd_pdf_filename" invisible="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

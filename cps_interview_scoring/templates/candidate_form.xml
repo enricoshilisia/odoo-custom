@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="candidate_form" name="Candidate Post-Interview Form">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <style>
+                    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+                    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; }
+
+                    .top-header {
+                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+                        color: #fff;
+                        padding: 18px 32px;
+                        box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+                    }
+                    .top-header h1 { font-size: 17px; font-weight: 700; }
+                    .top-header p { font-size: 12px; opacity: 0.65; margin-top: 3px; }
+
+                    .main-content { max-width: 680px; margin: 32px auto 60px; padding: 0 20px; }
+
+                    .card {
+                        background: #fff;
+                        border-radius: 16px;
+                        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+                        overflow: hidden;
+                        margin-bottom: 20px;
+                    }
+                    .card-header {
+                        background: linear-gradient(135deg, #0f3460, #16213e);
+                        color: #fff;
+                        padding: 16px 24px;
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                    }
+                    .card-header .icon {
+                        width: 36px; height: 36px;
+                        background: rgba(255,255,255,0.15);
+                        border-radius: 10px;
+                        display: flex; align-items: center; justify-content: center;
+                        font-size: 18px;
+                    }
+                    .card-header h2 { font-size: 15px; font-weight: 700; }
+                    .card-header p { font-size: 12px; opacity: 0.65; margin-top: 2px; }
+                    .card-body { padding: 24px; }
+
+                    /* Photo upload */
+                    .photo-upload-area {
+                        border: 2px dashed #d0d5e8;
+                        border-radius: 12px;
+                        padding: 32px;
+                        text-align: center;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        background: #fafbff;
+                        position: relative;
+                    }
+                    .photo-upload-area:hover { border-color: #0f3460; background: #f0f4ff; }
+                    .photo-upload-area input[type="file"] {
+                        position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+                    }
+                    .photo-upload-area .upload-icon { font-size: 36px; margin-bottom: 10px; }
+                    .photo-upload-area .upload-label { font-size: 14px; font-weight: 600; color: #0f3460; }
+                    .photo-upload-area .upload-hint { font-size: 12px; color: #aaa; margin-top: 4px; }
+                    .photo-preview { display: none; margin-top: 16px; }
+                    .photo-preview img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #27ae60; }
+
+                    /* Textarea */
+                    .form-label { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 8px; display: block; }
+                    .form-textarea {
+                        width: 100%;
+                        border: 2px solid #e8eaf0;
+                        border-radius: 10px;
+                        padding: 12px 14px;
+                        font-size: 13px;
+                        font-family: inherit;
+                        color: #333;
+                        resize: vertical;
+                        min-height: 90px;
+                        transition: border-color 0.2s;
+                    }
+                    .form-textarea:focus { outline: none; border-color: #0f3460; }
+
+                    /* Emoji rating */
+                    .emoji-options {
+                        display: flex;
+                        gap: 16px;
+                        margin-bottom: 20px;
+                        flex-wrap: wrap;
+                    }
+                    .emoji-option input[type="radio"] { display: none; }
+                    .emoji-option label {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 6px;
+                        padding: 16px 24px;
+                        border: 2px solid #e8eaf0;
+                        border-radius: 14px;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        background: #fafafa;
+                        min-width: 90px;
+                    }
+                    .emoji-option label:hover { border-color: #0f3460; background: #f0f4ff; transform: translateY(-2px); }
+                    .emoji-option label .emoji { font-size: 32px; }
+                    .emoji-option label .emoji-text { font-size: 12px; font-weight: 600; color: #555; }
+                    .emoji-option input[value="great"]:checked + label { border-color: #27ae60; background: #f0fdf4; }
+                    .emoji-option input[value="okay"]:checked + label { border-color: #f39c12; background: #fffbf0; }
+                    .emoji-option input[value="poor"]:checked + label { border-color: #e74c3c; background: #fff5f5; }
+                    .emoji-option input[type="radio"]:checked + label .emoji-text { font-weight: 700; }
+
+                    .comments-grid { display: flex; flex-direction: column; gap: 14px; }
+
+                    /* Submit */
+                    .submit-section { text-align: center; margin-top: 10px; }
+                    .btn-submit {
+                        padding: 14px 40px;
+                        background: linear-gradient(135deg, #27ae60, #2ecc71);
+                        color: #fff;
+                        border: none;
+                        border-radius: 12px;
+                        font-size: 15px;
+                        font-weight: 700;
+                        cursor: pointer;
+                        box-shadow: 0 4px 14px rgba(39,174,96,0.35);
+                        transition: all 0.2s;
+                    }
+                    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(39,174,96,0.45); }
+
+                    .candidate-greeting {
+                        background: #eaf4fb;
+                        border-left: 4px solid #3498db;
+                        border-radius: 8px;
+                        padding: 14px 18px;
+                        margin-bottom: 20px;
+                        font-size: 14px;
+                    }
+
+                    @media (max-width: 600px) {
+                        .top-header { padding: 14px 16px; }
+                        .main-content { padding: 0 12px; }
+                        .card-body { padding: 16px; }
+                        .emoji-options { gap: 10px; }
+                        .emoji-option label { padding: 12px 16px; min-width: 75px; }
+                    }
+                </style>
+            </t>
+
+            <div class="top-header">
+                <h1>Post-Interview Form</h1>
+                <p><t t-esc="session.job_id.name"/> &#183; <t t-esc="session.name"/></p>
+            </div>
+
+            <div class="main-content">
+                <div class="candidate-greeting">
+                    Dear <strong><t t-esc="candidate.partner_name"/></strong>, please complete the short form below.
+                </div>
+
+                <form t-attf-action="/candidate/form/#{token_rec.token}/submit"
+                      method="POST" enctype="multipart/form-data" id="candidate-form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <!-- Section 1: Photo -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="icon">&#128247;</div>
+                            <div>
+                                <h2>Passport Photo</h2>
+                                <p>Upload a clear, recent passport-size photo</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="photo-upload-area" id="upload-area">
+                                <input type="file" name="passport_photo"
+                                       accept="image/jpeg,image/png,image/jpg"
+                                       id="photo-input" onchange="previewPhoto(this)"/>
+                                <div class="upload-icon">&#128444;</div>
+                                <div class="upload-label">Click to upload your photo</div>
+                                <div class="upload-hint">JPG or PNG &#183; Max 5MB</div>
+                            </div>
+                            <div class="photo-preview" id="photo-preview">
+                                <img id="photo-img" src="" alt="Preview"/>
+                                <p style="font-size:12px;color:#27ae60;margin-top:8px;">&#10003; Photo selected</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Availability -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="icon">&#128197;</div>
+                            <div>
+                                <h2>Availability</h2>
+                                <p>Help us plan onboarding</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label">
+                                If you are awarded this position on Friday 23rd May, how soon can you be ready to report to work?
+                            </label>
+                            <textarea class="form-textarea" name="availability"
+                                      placeholder="e.g. I can start immediately / I need 2 weeks notice..."
+                                      required="required"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Rating -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="icon">&#11088;</div>
+                            <div>
+                                <h2>Rate Our Hiring Process</h2>
+                                <p>Your feedback helps us improve</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label" style="margin-bottom:14px;">How would you rate our hiring process overall?</label>
+                            <div class="emoji-options">
+                                <div class="emoji-option">
+                                    <input type="radio" name="emoji_rating" id="emoji_great" value="great" required="required"/>
+                                    <label for="emoji_great">
+                                        <span class="emoji">&#128522;</span>
+                                        <span class="emoji-text">Great</span>
+                                    </label>
+                                </div>
+                                <div class="emoji-option">
+                                    <input type="radio" name="emoji_rating" id="emoji_okay" value="okay"/>
+                                    <label for="emoji_okay">
+                                        <span class="emoji">&#128528;</span>
+                                        <span class="emoji-text">Okay</span>
+                                    </label>
+                                </div>
+                                <div class="emoji-option">
+                                    <input type="radio" name="emoji_rating" id="emoji_poor" value="poor"/>
+                                    <label for="emoji_poor">
+                                        <span class="emoji">&#128542;</span>
+                                        <span class="emoji-text">Needs Work</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="comments-grid">
+                                <div>
+                                    <label class="form-label">What did you enjoy most about the process?</label>
+                                    <textarea class="form-textarea" name="comment_1"
+                                              placeholder="Share what stood out positively..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="form-label">What could we improve?</label>
+                                    <textarea class="form-textarea" name="comment_2"
+                                              placeholder="Any suggestions for improvement..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="form-label">Any other feedback?</label>
+                                    <textarea class="form-textarea" name="comment_3"
+                                              placeholder="Anything else you'd like to share..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="submit-section">
+                        <button type="submit" class="btn-submit">Submit Form &#10003;</button>
+                    </div>
+                </form>
+            </div>
+
+            <script>
+            /* <![CDATA[ */
+            function previewPhoto(input) {
+                var preview = document.getElementById('photo-preview');
+                var img = document.getElementById('photo-img');
+                var area = document.getElementById('upload-area');
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                        preview.style.display = 'block';
+                        area.style.borderColor = '#27ae60';
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            /* ]]> */
+            </script>
+        </t>
+    </template>
+
+    <!-- Thank You -->
+    <template id="candidate_thank_you" name="Candidate Thank You">
+        <t t-call="web.layout">
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460);font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:#fff;border-radius:20px;padding:50px 40px;text-align:center;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width:72px;height:72px;background:linear-gradient(135deg,#27ae60,#2ecc71);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;">&#10003;</div>
+                    <h2 style="color:#1a1a2e;font-size:22px;margin-bottom:10px;">Thank You!</h2>
+                    <p style="color:#555;font-size:14px;line-height:1.6;">
+                        Hi <strong><t t-esc="candidate"/></strong>, your form has been submitted successfully.<br/>
+                        We will be in touch regarding the <strong><t t-esc="session.job_id.name"/></strong> position.
+                    </p>
+                    <p style="color:#aaa;font-size:12px;margin-top:20px;">You may close this window.</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Already Submitted -->
+    <template id="candidate_already_submitted" name="Candidate Already Submitted">
+        <t t-call="web.layout">
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460);font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:#fff;border-radius:20px;padding:50px 40px;text-align:center;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width:72px;height:72px;background:#e67e22;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;">&#8987;</div>
+                    <h2 style="color:#1a1a2e;font-size:22px;margin-bottom:10px;">Already Submitted</h2>
+                    <p style="color:#555;font-size:14px;">Hi <strong><t t-esc="candidate"/></strong>, we already received your form. Thank you!</p>
+                    <p style="color:#aaa;font-size:12px;margin-top:20px;">You may close this window.</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Invalid -->
+    <template id="candidate_invalid" name="Candidate Invalid Token">
+        <t t-call="web.layout">
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460);font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:#fff;border-radius:20px;padding:50px 40px;text-align:center;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width:72px;height:72px;background:#e74c3c;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;">&#10005;</div>
+                    <h2 style="color:#1a1a2e;font-size:22px;margin-bottom:10px;">Invalid Link</h2>
+                    <p style="color:#555;font-size:14px;">This link is invalid or has expired. Please contact HR.</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Session Closed -->
+    <template id="candidate_session_closed" name="Candidate Session Closed">
+        <t t-call="web.layout">
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460);font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:#fff;border-radius:20px;padding:50px 40px;text-align:center;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width:72px;height:72px;background:#95a5a6;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;">&#128274;</div>
+                    <h2 style="color:#1a1a2e;font-size:22px;margin-bottom:10px;">Not Available</h2>
+                    <p style="color:#555;font-size:14px;">This form is not currently accepting responses. Please contact HR.</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_interview_scoring_root"
+              name="Interview Scoring"
+              sequence="95"
+              web_icon="cps_interview_scoring,static/description/icon.png"/>
+
+    <menuitem id="menu_interview_sessions"
+              name="Sessions"
+              parent="menu_interview_scoring_root"
+              action="action_interview_session"
+              sequence="10"/>
+
+</odoo>

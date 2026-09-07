@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cps_recruitment_survey_config,cps.recruitment.survey.config,model_cps_recruitment_survey_config,base.group_user,1,1,1,1
+access_cps_recruitment_survey_config_manager,cps.recruitment.survey.config.manager,model_cps_recruitment_survey_config,base.group_system,1,1,1,1
+access_cps_score_bracket_user,cps.score.bracket.user,model_cps_score_bracket,base.group_user,1,0,0,0
+access_cps_score_bracket_manager,cps.score.bracket.manager,model_cps_score_bracket,hr_recruitment.group_hr_recruitment_manager,1,1,1,1
+access_cps_count_bracket_user,cps.count.bracket.user,model_cps_count_bracket,base.group_user,1,0,0,0
+access_cps_count_bracket_manager,cps.count.bracket.manager,model_cps_count_bracket,hr_recruitment.group_hr_recruitment_manager,1,1,1,1
+access_cps_count_bracket_user,cps.count.bracket.user,model_cps_count_bracket,base.group_user,1,0,0,0
+access_cps_count_bracket_manager,cps.count.bracket.manager,model_cps_count_bracket,hr_recruitment.group_hr_recruitment_manager,1,1,1,1

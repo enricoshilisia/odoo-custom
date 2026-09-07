@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_onboarding_template_manager,onboarding.template.manager,model_cps_onboarding_template,hr.group_hr_manager,1,1,1,1
+access_onboarding_template_user,onboarding.template.user,model_cps_onboarding_template,hr.group_hr_user,1,0,0,0
+access_onboarding_task_template_manager,onboarding.task.template.manager,model_cps_onboarding_task_template,hr.group_hr_manager,1,1,1,1
+access_onboarding_task_template_user,onboarding.task.template.user,model_cps_onboarding_task_template,hr.group_hr_user,1,0,0,0
+access_onboarding_plan_manager,onboarding.plan.manager,model_cps_onboarding_plan,hr.group_hr_manager,1,1,1,1
+access_onboarding_plan_user,onboarding.plan.user,model_cps_onboarding_plan,hr.group_hr_user,1,1,0,0
+access_onboarding_task_manager,onboarding.task.manager,model_cps_onboarding_task,hr.group_hr_manager,1,1,1,1
+access_onboarding_task_user,onboarding.task.user,model_cps_onboarding_task,hr.group_hr_user,1,1,0,0

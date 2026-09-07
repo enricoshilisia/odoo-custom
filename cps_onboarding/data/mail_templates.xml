@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Welcome Email -->
+    <record id="email_template_onboarding_welcome" model="mail.template">
+        <field name="name">Onboarding: Welcome &amp; Plan Activated</field>
+        <field name="model_id" ref="model_cps_onboarding_plan"/>
+        <field name="subject">Welcome to {{ object.employee_id.company_id.name }} — Your Onboarding Plan is Ready</field>
+        <field name="email_to">{{ object.employee_id.work_email or object.employee_id.private_email }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+                <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border-radius:12px;padding:28px;color:#fff;margin-bottom:24px;text-align:center;">
+                    <h2 style="margin:0 0 8px;font-size:22px;">Welcome aboard!</h2>
+                    <p style="margin:0;opacity:0.8;font-size:14px;">Your onboarding plan is ready</p>
+                </div>
+                <p style="font-size:15px;">Dear <t t-out="object.employee_id.name"/>,</p>
+                <p style="font-size:14px;color:#555;line-height:1.7;">
+                    We are delighted to welcome you to <strong><t t-out="object.employee_id.company_id.name"/></strong>.
+                    Your structured onboarding plan has been activated and is ready for you to follow.
+                </p>
+                <table style="width:100%;background:#f9f9f9;border-radius:8px;padding:16px;margin:16px 0;">
+                    <tr>
+                        <td style="padding:5px;color:#666;width:40%;"><strong>Plan:</strong></td>
+                        <td style="padding:5px;"><t t-out="object.name"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;color:#666;"><strong>Start Date:</strong></td>
+                        <td style="padding:5px;"><t t-out="object.start_date"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;color:#666;"><strong>Total Tasks:</strong></td>
+                        <td style="padding:5px;"><t t-out="object.total_tasks"/></td>
+                    </tr>
+                </table>
+                <p style="font-size:14px;color:#555;">
+                    Use the link below to track your progress, view your tasks, and mark items complete as you go.
+                </p>
+                <div style="text-align:center;margin:24px 0;">
+                    <a t-att-href="object.portal_url"
+                       style="background:#27ae60;color:#fff;padding:13px 32px;border-radius:8px;text-decoration:none;font-size:15px;font-weight:700;">
+                        View My Onboarding Plan
+                    </a>
+                </div>
+                <p style="font-size:12px;color:#aaa;">
+                    This link is personal to you. Keep it safe.<br/>
+                    Regards, <strong>HR Team</strong>
+                </p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Portal Link Resend -->
+    <record id="email_template_portal_link" model="mail.template">
+        <field name="name">Onboarding: Portal Link</field>
+        <field name="model_id" ref="model_cps_onboarding_plan"/>
+        <field name="subject">Your Onboarding Plan Link — {{ object.name }}</field>
+        <field name="email_to">{{ object.employee_id.work_email or object.employee_id.private_email }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+                <p>Dear <t t-out="object.employee_id.name"/>,</p>
+                <p style="color:#555;font-size:14px;">Here is your personal link to your onboarding plan:</p>
+                <div style="text-align:center;margin:24px 0;">
+                    <a t-att-href="object.portal_url"
+                       style="background:#0f3460;color:#fff;padding:13px 32px;border-radius:8px;text-decoration:none;font-size:15px;font-weight:700;">
+                        Open My Onboarding Plan
+                    </a>
+                </div>
+                <p style="font-size:12px;color:#aaa;">Regards, <strong>HR Team</strong></p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Task Reminder -->
+    <record id="email_template_task_reminder" model="mail.template">
+        <field name="name">Onboarding: Task Reminder</field>
+        <field name="model_id" ref="model_cps_onboarding_task"/>
+        <field name="subject">Reminder: Onboarding Task Due — {{ object.name }}</field>
+        <field name="email_to">{{ object.assigned_user_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+                <div style="background:#e74c3c;border-radius:8px;padding:16px;color:#fff;margin-bottom:20px;">
+                    <strong>&#9888; Onboarding Task Reminder</strong>
+                </div>
+                <p>Hi <t t-out="object.assigned_user_id.name"/>,</p>
+                <p style="color:#555;font-size:14px;">
+                    The following onboarding task is due and has not yet been completed:
+                </p>
+                <table style="width:100%;background:#f9f9f9;border-radius:8px;padding:16px;margin:16px 0;">
+                    <tr>
+                        <td style="padding:5px;color:#666;"><strong>Task:</strong></td>
+                        <td style="padding:5px;font-weight:700;"><t t-out="object.name"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;color:#666;"><strong>Employee:</strong></td>
+                        <td style="padding:5px;"><t t-out="object.plan_id.employee_id.name"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;color:#666;"><strong>Due Date:</strong></td>
+                        <td style="padding:5px;color:#e74c3c;font-weight:700;"><t t-out="object.due_date"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;color:#666;"><strong>Phase:</strong></td>
+                        <td style="padding:5px;"><t t-out="object.phase"/></td>
+                    </tr>
+                </table>
+                <p style="font-size:12px;color:#aaa;">Regards, <strong>HR Team</strong></p>
+            </div>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,22 @@
+{
+    'name': 'CPS Interview Scoring',
+    'version': '18.0.1.0.0',
+    'category': 'Recruitment',
+    'summary': 'Panel-based interview scoring for job candidates',
+    'author': 'CPS',
+    'depends': ['hr_recruitment', 'mail', 'portal', 'web'],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/mail_template.xml',
+        'data/candidate_mail_template.xml',
+        'views/interview_session_views.xml',
+        'views/menus.xml',
+        'templates/scoring_page.xml',
+        'templates/candidate_form.xml',
+        'report/interview_results_report.xml',
+        'report/interview_detailed_report.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}

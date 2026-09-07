@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="survey_fill_form_done_inherit"
+              name="CPS: Hide score from candidate finish page"
+              inherit_id="survey.survey_fill_form_done">
+        <!-- Replace "You scored X%" heading with plain Thank you -->
+        <xpath expr="//h1[hasclass('fs-2')]" position="replace">
+            <h1 class="fs-2">Thank you!</h1>
+        </xpath>
+        <!-- Hide "Congratulations, you have passed the test!" message from candidates -->
+        <xpath expr="//div[@class='col']//t[1]/t[1]/div[1]" position="replace">
+            <!-- pass message hidden from candidates -->
+        </xpath>
+        <!-- Hide "Unfortunately, you have failed the test." message from candidates -->
+        <xpath expr="//div[@class='col']//t[1]/t[2]/div" position="replace">
+            <!-- fail message hidden from candidates -->
+        </xpath>
+    </template>
+</odoo>

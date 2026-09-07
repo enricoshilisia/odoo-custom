@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="template_hr_manager_90day" model="cps.onboarding.template">
+        <field name="name">HR Manager — 90-Day Onboarding Plan</field>
+        <field name="description">Structured 90-day onboarding for HR Manager roles. Covers pre-boarding, system setup, stakeholder meetings, HR audit, AI literacy training, and 90-day review.</field>
+    </record>
+
+    <!-- PRE-BOARDING -->
+    <record id="task_t_01" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">1</field>
+        <field name="phase">preboarding</field>
+        <field name="day_offset">-3</field>
+        <field name="name">Issue company laptop configured with corporate image</field>
+        <field name="assignee_role">it</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">False</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_02" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">2</field>
+        <field name="phase">preboarding</field>
+        <field name="day_offset">-3</field>
+        <field name="name">Create corporate email account (Microsoft 365)</field>
+        <field name="assignee_role">it</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">False</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_03" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">3</field>
+        <field name="phase">preboarding</field>
+        <field name="day_offset">-3</field>
+        <field name="name">Grant access to Odoo HR (HR Manager role permissions)</field>
+        <field name="assignee_role">it</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">False</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_04" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">4</field>
+        <field name="phase">preboarding</field>
+        <field name="day_offset">-3</field>
+        <field name="name">Set up Microsoft Teams, SharePoint, and OneDrive access</field>
+        <field name="assignee_role">it</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">False</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_05" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">5</field>
+        <field name="phase">preboarding</field>
+        <field name="day_offset">-1</field>
+        <field name="name">Prepare welcome pack and first-week schedule</field>
+        <field name="assignee_role">hr</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">False</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_06" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">6</field>
+        <field name="phase">preboarding</field>
+        <field name="day_offset">-1</field>
+        <field name="name">Assign a buddy / mentor for the first 30 days</field>
+        <field name="assignee_role">line_manager</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">False</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_07" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">7</field>
+        <field name="phase">preboarding</field>
+        <field name="day_offset">-1</field>
+        <field name="name">Share organisation chart, team directory, and company handbook</field>
+        <field name="assignee_role">line_manager</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">False</field>
+        <field name="send_reminder">True</field>
+    </record>
+
+    <!-- PHASE 1 -->
+    <record id="task_t_08" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">8</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">1</field>
+        <field name="name">Formal welcome meeting with CEO / Director</field>
+        <field name="assignee_role">ceo</field>
+        <field name="odoo_module">Calendar</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_09" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">9</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">1</field>
+        <field name="name">Receive and configure laptop — verify all software installed</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">False</field>
+    </record>
+    <record id="task_t_10" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">10</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">1</field>
+        <field name="name">Set up email, calendar, Teams, and Odoo HR access</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">False</field>
+    </record>
+    <record id="task_t_11" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">11</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">3</field>
+        <field name="name">Confirm all system access is working — document any gaps</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_12" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">12</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">3</field>
+        <field name="name">Set up email signature and communication tools</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Employees</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">False</field>
+    </record>
+    <record id="task_t_13" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">13</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">7</field>
+        <field name="name">Complete 1:1 meetings with all departmental managers</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Calendar</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_14" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">14</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">15</field>
+        <field name="name">Launch HR Audit — gather records, contracts, and policy documents</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Documents / Project</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_15" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">15</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">20</field>
+        <field name="name">Pull leave data and initiate Leave Management Review</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Time Off</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_16" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">16</field>
+        <field name="phase">phase1</field>
+        <field name="day_offset">30</field>
+        <field name="name">30-Day Check-In with Line Manager (documented in Appraisals)</field>
+        <field name="assignee_role">line_manager</field>
+        <field name="odoo_module">Appraisals</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+
+    <!-- PHASE 2 -->
+    <record id="task_t_17" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">17</field>
+        <field name="phase">phase2</field>
+        <field name="day_offset">40</field>
+        <field name="name">Begin AI Literacy Training — complete first two Microsoft courses</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">eLearning / Training</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_18" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">18</field>
+        <field name="phase">phase2</field>
+        <field name="day_offset">45</field>
+        <field name="name">Partnership Specialisation Review — assess certifications and gaps</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Employees / Skills</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_19" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">19</field>
+        <field name="phase">phase2</field>
+        <field name="day_offset">50</field>
+        <field name="name">HR Audit — finalise findings and produce written report</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Documents / Project</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_20" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">20</field>
+        <field name="phase">phase2</field>
+        <field name="day_offset">50</field>
+        <field name="name">Resource Mapping — map headcount to business functions</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Employees / Departments</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_21" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">21</field>
+        <field name="phase">phase2</field>
+        <field name="day_offset">55</field>
+        <field name="name">Build 12-month Certification Roadmap</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Employees / Skills / Training</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_22" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">22</field>
+        <field name="phase">phase2</field>
+        <field name="day_offset">55</field>
+        <field name="name">Produce Leave Management Policy Recommendations</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Time Off / Documents</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_23" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">23</field>
+        <field name="phase">phase2</field>
+        <field name="day_offset">58</field>
+        <field name="name">Develop prioritised Recruitment Plan</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Recruitment</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_24" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">24</field>
+        <field name="phase">phase2</field>
+        <field name="day_offset">60</field>
+        <field name="name">60-Day Check-In with Line Manager (documented in Appraisals)</field>
+        <field name="assignee_role">line_manager</field>
+        <field name="odoo_module">Appraisals</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+
+    <!-- PHASE 3 -->
+    <record id="task_t_25" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">25</field>
+        <field name="phase">phase3</field>
+        <field name="day_offset">75</field>
+        <field name="name">All staff enrolled in AI Literacy Training — HR Manager completes all 4 courses</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">eLearning / Training</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_26" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">26</field>
+        <field name="phase">phase3</field>
+        <field name="day_offset">80</field>
+        <field name="name">Certification Roadmap communicated to all relevant staff</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Employees / Skills</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_27" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">27</field>
+        <field name="phase">phase3</field>
+        <field name="day_offset">80</field>
+        <field name="name">Leave Policy Recommendations implemented in Odoo — staff notified</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Time Off</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_28" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">28</field>
+        <field name="phase">phase3</field>
+        <field name="day_offset">85</field>
+        <field name="name">Complete formal performance appraisals for all managers</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Appraisals</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_29" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">29</field>
+        <field name="phase">phase3</field>
+        <field name="day_offset">85</field>
+        <field name="name">Activate Recruitment Plan — at least 2 roles live in Odoo Recruitment</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Recruitment</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+    <record id="task_t_30" model="cps.onboarding.task.template">
+        <field name="template_id" ref="template_hr_manager_90day"/>
+        <field name="sequence">30</field>
+        <field name="phase">phase3</field>
+        <field name="day_offset">90</field>
+        <field name="name">90-Day Review &amp; Presentation to Leadership</field>
+        <field name="assignee_role">employee</field>
+        <field name="odoo_module">Appraisals / Meetings</field>
+        <field name="is_employee_visible">True</field>
+        <field name="send_reminder">True</field>
+    </record>
+
+</odoo>

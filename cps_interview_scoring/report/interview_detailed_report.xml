@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_interview_detailed_report" model="ir.actions.report">
+        <field name="name">Detailed Interview Report</field>
+        <field name="model">cps.interview.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cps_interview_scoring.interview_detailed_doc</field>
+        <field name="report_file">cps_interview_scoring.interview_detailed_doc</field>
+        <field name="binding_model_id" ref="model_cps_interview_session"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="interview_detailed_doc">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="data" t-value="doc.get_detailed_report_data()"/>
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family:Arial,sans-serif;color:#2b2f33;">
+
+                        <h2 style="color:#1c2126;border-bottom:3px solid #7ebb0e;padding-bottom:6px;">
+                            Detailed Interview Report
+                        </h2>
+                        <p style="color:#6b7280;margin:2px 0 14px;">
+                            <t t-esc="doc.name"/>
+                        </p>
+
+                        <table style="width:100%;font-size:12px;margin-bottom:16px;">
+                            <tr>
+                                <td><b>Panel:</b> <t t-esc="', '.join(p['name'] for p in data['panelists'])"/></td>
+                                <td><b>Questions:</b> <t t-esc="len(data['questions'])"/></td>
+                                <td><b>Candidates scored:</b> <t t-esc="len(data['candidates'])"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Scoreboard -->
+                        <h3 style="color:#1c2126;">Interview Scoreboard</h3>
+                        <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:20px;">
+                            <thead>
+                                <tr style="background:#7ebb0e;color:#fff;">
+                                    <th style="padding:5px 7px;text-align:left;">#</th>
+                                    <th style="padding:5px 7px;text-align:left;">Candidate</th>
+                                    <t t-foreach="data['panelists']" t-as="p">
+                                        <th style="padding:5px 7px;"><t t-esc="p['name']"/></th>
+                                    </t>
+                                    <th style="padding:5px 7px;">Avg</th>
+                                    <th style="padding:5px 7px;">Spread</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="data['candidates']" t-as="c">
+                                    <tr t-att-style="'background:#fdecea;' if c['flag'] else ('background:#f7f9fa;' if c_index % 2 else '')">
+                                        <td style="padding:5px 7px;"><t t-esc="c_index + 1"/></td>
+                                        <td style="padding:5px 7px;">
+                                            <t t-esc="c['name']"/>
+                                            <span t-if="c['flag']" style="color:#d9534f;font-weight:bold;"> &#9888; review</span>
+                                        </td>
+                                        <t t-foreach="data['panelists']" t-as="p">
+                                            <td style="padding:5px 7px;text-align:center;">
+                                                <t t-set="v" t-value="c['per_panelist'].get(p['id'])"/>
+                                                <t t-esc="'-' if v is None else v"/>
+                                            </td>
+                                        </t>
+                                        <td style="padding:5px 7px;text-align:center;font-weight:bold;">
+                                            <t t-esc="'%.1f' % c['avg']"/>
+                                        </td>
+                                        <td t-att-style="'padding:5px 7px;text-align:center;color:%s;' % ('#d9534f' if c['flag'] else '#6b7280')">
+                                            <t t-esc="c['spread']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Per-candidate detail -->
+                        <h3 style="color:#1c2126;">Candidate Detail</h3>
+                        <t t-foreach="data['candidates']" t-as="c">
+                            <div t-att-style="'border:%s;border-radius:6px;padding:10px 12px;margin-bottom:14px;page-break-inside:avoid;' % ('2px solid #d9534f' if c['flag'] else '1px solid #e6eaed')">
+                                <div style="font-weight:bold;font-size:13px;margin-bottom:4px;">
+                                    <t t-esc="c['name']"/>
+                                    <span t-if="c['flag']" style="color:#d9534f;"> &#9888; panelist divergence (spread <t t-esc="c['spread']"/>)</span>
+                                </div>
+                                <div style="font-size:11px;color:#6b7280;margin-bottom:6px;">
+                                    Prescreening: <t t-esc="c['auto_score']"/>/65 &#183; Panel average: <t t-esc="'%.1f' % c['avg']"/>
+                                </div>
+
+                                <table style="width:100%;border-collapse:collapse;font-size:10px;">
+                                    <tr style="border-bottom:1px solid #ddd;">
+                                        <th style="text-align:left;padding:2px 5px;">Question</th>
+                                        <t t-foreach="data['panelists']" t-as="p">
+                                            <th style="padding:2px 5px;"><t t-esc="p['name']"/></th>
+                                        </t>
+                                    </tr>
+                                    <t t-foreach="c['grid']" t-as="row">
+                                        <tr style="border-bottom:1px solid #f0f2f4;">
+                                            <td style="padding:2px 5px;"><t t-esc="row['question']"/></td>
+                                            <t t-foreach="row['cells']" t-as="cell">
+                                                <td style="padding:2px 5px;text-align:center;">
+                                                    <t t-esc="'-' if cell is None else cell"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </table>
+
+                                <!-- comments -->
+                                <div style="margin-top:8px;">
+                                    <b style="font-size:11px;">Panel Comments:</b>
+                                    <t t-if="c['comments']">
+                                        <ul style="margin:4px 0;font-size:11px;">
+                                            <t t-foreach="c['comments']" t-as="cm">
+                                                <li><b><t t-esc="cm['panelist']"/>:</b> <t t-esc="cm['text']"/></li>
+                                            </t>
+                                        </ul>
+                                    </t>
+                                    <t t-else="">
+                                        <span style="font-size:11px;color:#999;"> none recorded yet</span>
+                                    </t>
+                                </div>
+
+                                <!-- evaluation -->
+                                <div style="margin-top:6px;font-size:11px;">
+                                    <b>Final Evaluation:</b>
+                                    <t t-if="c['evaluation'] and (c['evaluation']['hr_recommendation'] or c['evaluation']['expected_salary'])">
+                                        <span> Rec: <t t-esc="c['evaluation']['hr_recommendation'] or '-'"/>
+                                        &#183; Expected: <t t-esc="c['evaluation']['expected_salary'] or '-'"/>
+                                        &#183; Notice: <t t-esc="c['evaluation']['notice_period'] or '-'"/></span>
+                                    </t>
+                                    <t t-else="">
+                                        <span style="color:#999;"> pending HR completion</span>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

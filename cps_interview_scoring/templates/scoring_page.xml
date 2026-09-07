@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="scoring_form" name="Interview Scoring Form">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <style>
+                    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+                    body {
+                        font-family: 'Segoe UI', Arial, sans-serif;
+                        background: #f0f2f5;
+                        color: #1a1a2e;
+                    }
+
+                    /* ── TOP HEADER ── */
+                    .top-header {
+                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+                        color: #fff;
+                        padding: 18px 32px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        position: sticky;
+                        top: 0;
+                        z-index: 200;
+                        box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+                    }
+                    .top-header-left h1 {
+                        font-size: 17px;
+                        font-weight: 700;
+                        letter-spacing: 0.3px;
+                    }
+                    .top-header-left p {
+                        font-size: 12px;
+                        opacity: 0.65;
+                        margin-top: 3px;
+                    }
+                    .top-header-right {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+                    .panelist-badge {
+                        background: rgba(255,255,255,0.12);
+                        border: 1px solid rgba(255,255,255,0.2);
+                        border-radius: 20px;
+                        padding: 6px 14px;
+                        font-size: 12px;
+                        display: flex;
+                        align-items: center;
+                        gap: 7px;
+                    }
+                    .panelist-badge .dot {
+                        width: 8px; height: 8px;
+                        background: #2ecc71;
+                        border-radius: 50%;
+                        display: inline-block;
+                    }
+
+                    /* ── CANDIDATE TABS STRIP ── */
+                    .tabs-strip {
+                        background: #fff;
+                        border-bottom: 1px solid #e8eaf0;
+                        padding: 0 24px;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        overflow-x: auto;
+                        scrollbar-width: none;
+                        position: sticky;
+                        top: 61px;
+                        z-index: 150;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+                    }
+                    .tabs-strip::-webkit-scrollbar { display: none; }
+                    .tab-btn {
+                        padding: 14px 18px;
+                        border: none;
+                        background: transparent;
+                        font-size: 13px;
+                        font-weight: 500;
+                        color: #888;
+                        cursor: pointer;
+                        white-space: nowrap;
+                        border-bottom: 3px solid transparent;
+                        transition: all 0.2s;
+                        position: relative;
+                    }
+                    .tab-btn:hover { color: #0f3460; }
+                    .tab-btn.active {
+                        color: #0f3460;
+                        border-bottom-color: #0f3460;
+                        font-weight: 700;
+                    }
+                    .tab-btn.done { color: #27ae60; }
+                    .tab-btn.done.active {
+                        color: #27ae60;
+                        border-bottom-color: #27ae60;
+                    }
+                    .tab-btn .check-dot {
+                        display: inline-block;
+                        width: 7px; height: 7px;
+                        background: #27ae60;
+                        border-radius: 50%;
+                        margin-left: 5px;
+                        vertical-align: middle;
+                        opacity: 0;
+                        transition: opacity 0.2s;
+                    }
+                    .tab-btn.done .check-dot { opacity: 1; }
+
+                    /* ── MAIN CONTENT ── */
+                    .main-content {
+                        max-width: 780px;
+                        margin: 32px auto 120px;
+                        padding: 0 20px;
+                    }
+
+                    /* ── CANDIDATE PANEL ── */
+                    .candidate-panel { display: none; }
+                    .candidate-panel.active { display: block; }
+
+                    .candidate-card {
+                        background: #fff;
+                        border-radius: 16px;
+                        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+                        overflow: hidden;
+                    }
+                    .candidate-card-header {
+                        background: linear-gradient(135deg, #0f3460, #16213e);
+                        color: #fff;
+                        padding: 20px 28px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                    .candidate-card-header .name {
+                        font-size: 20px;
+                        font-weight: 700;
+                        letter-spacing: 0.2px;
+                    }
+                    .candidate-card-header .meta {
+                        font-size: 12px;
+                        opacity: 0.6;
+                        margin-top: 3px;
+                    }
+                    .candidate-progress-ring {
+                        width: 52px; height: 52px;
+                        position: relative;
+                        flex-shrink: 0;
+                    }
+                    .candidate-progress-ring svg {
+                        transform: rotate(-90deg);
+                    }
+                    .candidate-progress-ring .ring-bg {
+                        fill: none;
+                        stroke: rgba(255,255,255,0.15);
+                        stroke-width: 4;
+                    }
+                    .candidate-progress-ring .ring-fill {
+                        fill: none;
+                        stroke: #2ecc71;
+                        stroke-width: 4;
+                        stroke-linecap: round;
+                        stroke-dasharray: 138;
+                        stroke-dashoffset: 138;
+                        transition: stroke-dashoffset 0.4s ease;
+                    }
+                    .candidate-progress-ring .ring-text {
+                        position: absolute;
+                        inset: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 11px;
+                        font-weight: 700;
+                        color: #fff;
+                    }
+
+                    /* ── QUESTION ROWS ── */
+                    .questions-body { padding: 8px 0; }
+                    .question-row {
+                        display: flex;
+                        align-items: center;
+                        padding: 16px 28px;
+                        border-bottom: 1px solid #f3f4f8;
+                        gap: 16px;
+                        transition: background 0.15s;
+                    }
+                    .question-row:last-child { border-bottom: none; }
+                    .question-row:hover { background: #fafbff; }
+                    .question-row.answered { background: #f6fffe; }
+                    .q-num {
+                        width: 30px; height: 30px;
+                        background: #f0f2f5;
+                        color: #0f3460;
+                        border-radius: 8px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 12px;
+                        font-weight: 700;
+                        flex-shrink: 0;
+                        transition: all 0.2s;
+                    }
+                    .question-row.answered .q-num {
+                        background: #27ae60;
+                        color: #fff;
+                    }
+                    .q-text {
+                        flex: 1;
+                        font-size: 13.5px;
+                        color: #333;
+                        line-height: 1.5;
+                    }
+
+                    /* ── SCORE BUTTONS ── */
+                    .score-group {
+                        display: flex;
+                        gap: 6px;
+                        flex-shrink: 0;
+                    }
+                    .score-group input[type="radio"] { display: none; }
+                    .score-group label {
+                        width: 40px; height: 40px;
+                        border-radius: 10px;
+                        border: 2px solid #e8eaf0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                        font-weight: 700;
+                        cursor: pointer;
+                        color: #aaa;
+                        background: #fafafa;
+                        transition: all 0.15s;
+                        user-select: none;
+                    }
+                    .score-group label:hover {
+                        border-color: #0f3460;
+                        color: #0f3460;
+                        background: #f0f4ff;
+                        transform: translateY(-2px);
+                        box-shadow: 0 3px 8px rgba(15,52,96,0.15);
+                    }
+                    .score-group input[type="radio"][value="1"]:checked + label { border-color: #e74c3c; background: #e74c3c; color: #fff; }
+                    .score-group input[type="radio"][value="2"]:checked + label { border-color: #e67e22; background: #e67e22; color: #fff; }
+                    .score-group input[type="radio"][value="3"]:checked + label { border-color: #f39c12; background: #f39c12; color: #fff; }
+                    .score-group input[type="radio"][value="4"]:checked + label { border-color: #2ecc71; background: #2ecc71; color: #fff; }
+                    .score-group input[type="radio"][value="5"]:checked + label { border-color: #27ae60; background: #27ae60; color: #fff; box-shadow: 0 0 0 3px rgba(39,174,96,0.2); }
+
+                    /* ── BOTTOM NAV ── */
+                    .bottom-nav {
+                        position: fixed;
+                        bottom: 0; left: 0; right: 0;
+                        background: #fff;
+                        border-top: 1px solid #e8eaf0;
+                        padding: 12px 28px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        z-index: 200;
+                        box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+                    }
+                    .nav-section { display: flex; align-items: center; gap: 12px; min-width: 160px; }
+                    .nav-section.center { justify-content: center; flex: 1; }
+                    .nav-section.right { justify-content: flex-end; }
+
+                    .btn-nav {
+                        padding: 10px 22px;
+                        border-radius: 10px;
+                        border: 2px solid #e8eaf0;
+                        background: #fff;
+                        color: #555;
+                        font-size: 13px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                    }
+                    .btn-nav:hover:not(:disabled) {
+                        border-color: #0f3460;
+                        color: #0f3460;
+                        background: #f0f4ff;
+                    }
+                    .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+                    .nav-counter {
+                        font-size: 13px;
+                        font-weight: 700;
+                        color: #0f3460;
+                        background: #f0f4ff;
+                        padding: 8px 18px;
+                        border-radius: 20px;
+                        min-width: 80px;
+                        text-align: center;
+                    }
+
+                    .overall-progress { text-align: center; }
+                    .overall-progress .prog-label {
+                        font-size: 11px;
+                        color: #999;
+                        margin-bottom: 4px;
+                    }
+                    .prog-bar-wrap {
+                        width: 140px;
+                        height: 6px;
+                        background: #eee;
+                        border-radius: 10px;
+                        overflow: hidden;
+                    }
+                    .prog-bar-fill {
+                        height: 100%;
+                        background: linear-gradient(90deg, #0f3460, #2ecc71);
+                        border-radius: 10px;
+                        transition: width 0.4s ease;
+                        width: 0%;
+                    }
+
+                    .btn-submit {
+                        display: none;
+                        padding: 11px 28px;
+                        background: linear-gradient(135deg, #27ae60, #2ecc71);
+                        color: #fff;
+                        border: none;
+                        border-radius: 10px;
+                        font-size: 14px;
+                        font-weight: 700;
+                        cursor: pointer;
+                        box-shadow: 0 4px 14px rgba(39,174,96,0.35);
+                        transition: all 0.2s;
+                        white-space: nowrap;
+                    }
+                    .btn-submit:hover {
+                        transform: translateY(-1px);
+                        box-shadow: 0 6px 18px rgba(39,174,96,0.45);
+                    }
+
+                    /* ── SCORE LEGEND ── */
+                    .score-legend {
+                        display: flex;
+                        gap: 16px;
+                        justify-content: flex-end;
+                        padding: 10px 28px;
+                        background: #fafbff;
+                        border-top: 1px solid #f0f2f5;
+                        font-size: 11px;
+                        color: #aaa;
+                    }
+                    .legend-item { display: flex; align-items: center; gap: 4px; }
+                    .legend-dot {
+                        width: 10px; height: 10px;
+                        border-radius: 3px;
+                    }
+
+                    @media (max-width: 600px) {
+                        .top-header { padding: 14px 16px; }
+                        .top-header-left h1 { font-size: 14px; }
+                        .main-content { margin-top: 20px; padding: 0 12px; }
+                        .question-row { padding: 14px 16px; gap: 10px; }
+                        .score-group label { width: 35px; height: 35px; font-size: 13px; }
+                        .tab-btn { padding: 12px 12px; font-size: 12px; }
+                        .bottom-nav { padding: 10px 14px; }
+                        .btn-nav { padding: 8px 14px; font-size: 12px; }
+                        .prog-bar-wrap { width: 90px; }
+                    }
+                </style>
+            </t>
+
+            <!-- Top Header -->
+            <div class="top-header">
+                <div class="top-header-left">
+                    <h1>Interview Scoring</h1>
+                    <p>
+                        <t t-esc="session.job_id.name"/> &#183; <t t-esc="session.name"/>
+                    </p>
+                </div>
+                <div class="top-header-right">
+                    <div class="panelist-badge">
+                        <span class="dot"></span>
+                        <t t-esc="token_rec.user_id.name"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidate Tabs Strip -->
+            <div class="tabs-strip" id="tabs-strip">
+                <t t-foreach="candidates" t-as="candidate">
+                    <button type="button"
+                            t-attf-class="tab-btn #{'active' if candidate_index == 0 else ''}"
+                            t-attf-id="tab-#{candidate_index}"
+                            t-attf-onclick="goTo(#{candidate_index})">
+                        <t t-esc="candidate.partner_name"/>
+                        <span class="check-dot"></span>
+                    </button>
+                </t>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <form t-attf-action="/interview/score/#{token_rec.token}/submit"
+                      method="POST" id="scoring-form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <t t-foreach="candidates" t-as="candidate">
+                        <div t-attf-class="candidate-panel #{'active' if candidate_index == 0 else ''}"
+                             t-attf-id="panel-#{candidate_index}"
+                             t-att-data-candidate-id="candidate.id"
+                             t-att-data-total-questions="len(questions)">
+
+                            <div class="candidate-card">
+                                <div class="candidate-card-header">
+                                    <div style="display:flex;align-items:center;gap:14px;">
+                                        <t t-if="candidate.partner_id and candidate.partner_id.image_128">
+                                            <img t-att-src="'data:image/png;base64,' + candidate.partner_id.image_128.decode()"
+                                                 style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.3);"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,0.3);">
+                                                <t t-esc="candidate.partner_name[0].upper() if candidate.partner_name else '?'"/>
+                                            </div>
+                                        </t>
+                                        <div>
+                                            <div class="name"><t t-esc="candidate.partner_name"/></div>
+                                            <div class="meta">
+                                                Candidate <t t-esc="candidate_index + 1"/> of <t t-esc="len(candidates)"/>
+                                                &#160;&#183;&#160;
+                                                <t t-esc="len(questions)"/> questions
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="candidate-progress-ring" t-attf-id="ring-wrap-#{candidate_index}">
+                                        <svg width="52" height="52" viewBox="0 0 52 52">
+                                            <circle class="ring-bg" cx="26" cy="26" r="22"/>
+                                            <circle class="ring-fill"
+                                                    t-attf-id="ring-#{candidate.id}"
+                                                    cx="26" cy="26" r="22"/>
+                                        </svg>
+                                        <div class="ring-text" t-attf-id="ring-text-#{candidate.id}">0%</div>
+                                    </div>
+                                </div>
+
+                                <div class="questions-body">
+                                    <t t-foreach="questions" t-as="q">
+                                        <div class="question-row"
+                                             t-attf-id="qrow-#{candidate.id}-#{q.id}">
+                                            <div class="q-num"><t t-esc="q_index + 1"/></div>
+                                            <div class="q-text">
+                                                <t t-esc="q.name"/>
+                                                <t t-if="q.scoring_guide">
+                                                    <div style="font-size:12px;color:#888;margin-top:4px;font-style:italic;font-weight:normal;">
+                                                        <strong style="color:#7ebb0e;font-style:normal;">Look for:</strong>
+                                                        <t t-esc="q.scoring_guide"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div class="score-group">
+                                                <t t-foreach="[1,2,3,4,5]" t-as="val">
+                                                    <input type="radio"
+                                                        t-attf-name="score_#{candidate.id}_#{q.id}"
+                                                        t-attf-id="sc_#{candidate.id}_#{q.id}_#{val}"
+                                                        t-att-value="val"
+                                                        t-att-data-cid="candidate.id"
+                                                        t-att-data-qid="q.id"
+                                                        required="required"/>
+                                                    <label t-attf-for="sc_#{candidate.id}_#{q.id}_#{val}">
+                                                        <t t-esc="val"/>
+                                                    </label>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+
+                                <div style="margin-top:18px;padding-top:14px;border-top:1px solid #eee;">
+                                    <label style="font-weight:600;display:block;margin-bottom:6px;">Your comments on this candidate</label>
+                                    <textarea t-attf-name="comment_#{candidate.id}" rows="3" placeholder="Optional — your assessment of this candidate" style="width:100%;padding:9px 11px;border:1px solid #ccc;border-radius:6px;font-family:inherit;font-size:14px;box-sizing:border-box;"></textarea>
+                                </div>
+
+                                <div class="score-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-dot" style="background:#e74c3c;"></div> 1 Poor
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-dot" style="background:#e67e22;"></div> 2 Below avg
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-dot" style="background:#f39c12;"></div> 3 Average
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-dot" style="background:#2ecc71;"></div> 4 Good
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-dot" style="background:#27ae60;"></div> 5 Excellent
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <!-- Bottom Nav -->
+                    <div class="bottom-nav">
+                        <div class="nav-section">
+                            <div class="overall-progress">
+                                <div class="prog-label">
+                                    <span id="answered-count">0</span> / <span id="total-count">0</span> scored
+                                </div>
+                                <div class="prog-bar-wrap">
+                                    <div class="prog-bar-fill" id="progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nav-section center">
+                            <button type="button" class="btn-nav" id="btn-prev"
+                                    onclick="navigate(-1)" disabled="disabled">
+                                &#8592; Prev
+                            </button>
+                            <div class="nav-counter" id="nav-counter">
+                                1 / <t t-esc="len(candidates)"/>
+                            </div>
+                            <button type="button" class="btn-nav" id="btn-next"
+                                    onclick="navigate(1)">
+                                Next &#8594;
+                            </button>
+                        </div>
+                        <div class="nav-section right">
+                            <button type="submit" class="btn-submit" id="btn-submit">
+                                Submit All Scores &#10003;
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <script>
+            (function () {
+                var current = 0;
+                var totalCandidates = <t t-esc="len(candidates)"/>;
+                var questionsPerCandidate = <t t-esc="len(questions)"/>;
+                var totalQuestions = totalCandidates * questionsPerCandidate;
+                var panels = document.querySelectorAll('.candidate-panel');
+                var tabs   = document.querySelectorAll('.tab-btn');
+                var circumference = 138;
+
+                document.getElementById('total-count').textContent = totalQuestions;
+
+                function goTo(idx) {
+                    panels[current].classList.remove('active');
+                    tabs[current].classList.remove('active');
+                    current = idx;
+                    panels[current].classList.add('active');
+                    tabs[current].classList.add('active');
+                    tabs[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    document.getElementById('btn-prev').disabled = (current === 0);
+                    document.getElementById('btn-next').disabled = (current === totalCandidates - 1);
+                    document.getElementById('nav-counter').textContent = (current + 1) + ' / ' + totalCandidates;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                window.goTo = goTo;
+                window.navigate = function (dir) {
+                    var next = current + dir;
+                    if (next >= 0 &amp;&amp; next &lt; totalCandidates) goTo(next);
+                };
+
+                function updateProgress() {
+                    var groups = {};
+                    document.querySelectorAll('input[type="radio"]').forEach(function (r) {
+                        if (!groups[r.name]) groups[r.name] = false;
+                        if (r.checked) groups[r.name] = true;
+                    });
+
+                    var answered = 0;
+                    var perCandidate = {};
+                    Object.keys(groups).forEach(function (name) {
+                        var cid = name.split('_')[1];
+                        if (!perCandidate[cid]) perCandidate[cid] = 0;
+                        if (groups[name]) {
+                            answered++;
+                            perCandidate[cid]++;
+                        }
+                        // mark row answered
+                        var parts = name.split('_');
+                        var rowId = 'qrow-' + parts[1] + '-' + parts[2];
+                        var row = document.getElementById(rowId);
+                        if (row) {
+                            row.classList.toggle('answered', groups[name]);
+                        }
+                    });
+
+                    // overall progress
+                    document.getElementById('answered-count').textContent = answered;
+                    var pct = totalQuestions > 0 ? (answered / totalQuestions * 100) : 0;
+                    document.getElementById('progress-fill').style.width = pct.toFixed(1) + '%';
+
+                    // per-candidate rings + tabs
+                    panels.forEach(function (panel, i) {
+                        var cid = panel.getAttribute('data-candidate-id');
+                        var done = perCandidate[cid] || 0;
+                        var cpct = questionsPerCandidate > 0 ? done / questionsPerCandidate : 0;
+
+                        var ring = document.getElementById('ring-' + cid);
+                        var ringText = document.getElementById('ring-text-' + cid);
+                        if (ring) {
+                            ring.style.strokeDashoffset = (circumference * (1 - cpct)).toFixed(2);
+                        }
+                        if (ringText) {
+                            ringText.textContent = Math.round(cpct * 100) + '%';
+                        }
+
+                        if (done >= questionsPerCandidate) {
+                            tabs[i].classList.add('done');
+                        } else {
+                            tabs[i].classList.remove('done');
+                        }
+                    });
+
+                    // show submit only when all done
+                    document.getElementById('btn-submit').style.display =
+                        answered >= totalQuestions ? 'block' : 'none';
+                }
+
+                document.querySelectorAll('input[type="radio"]').forEach(function (r) {
+                    r.addEventListener('change', updateProgress);
+                });
+
+                // init
+                if (totalCandidates === 1) document.getElementById('btn-next').disabled = true;
+                document.getElementById('btn-prev').disabled = true;
+                updateProgress();
+            })();
+            </script>
+        </t>
+    </template>
+
+    <!-- Thank You -->
+    <template id="scoring_thank_you" name="Scoring Thank You">
+        <t t-call="web.layout">
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460);font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:#fff;border-radius:20px;padding:50px 40px;text-align:center;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width:72px;height:72px;background:linear-gradient(135deg,#27ae60,#2ecc71);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;">&#10003;</div>
+                    <h2 style="color:#1a1a2e;font-size:22px;margin-bottom:10px;">Scores Submitted!</h2>
+                    <p style="color:#555;font-size:14px;line-height:1.6;">
+                        Thank you, <strong><t t-esc="panelist"/></strong>.<br/>
+                        Your scores for <strong><t t-esc="session.name"/></strong> have been recorded successfully.
+                    </p>
+                    <p style="color:#aaa;font-size:12px;margin-top:20px;">You may close this window.</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Already Submitted -->
+    <template id="scoring_already_submitted" name="Already Submitted">
+        <t t-call="web.layout">
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460);font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:#fff;border-radius:20px;padding:50px 40px;text-align:center;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width:72px;height:72px;background:#e67e22;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;">&#8987;</div>
+                    <h2 style="color:#1a1a2e;font-size:22px;margin-bottom:10px;">Already Submitted</h2>
+                    <p style="color:#555;font-size:14px;">Hi <strong><t t-esc="panelist"/></strong>, your scores for this session have already been recorded.</p>
+                    <p style="color:#aaa;font-size:12px;margin-top:20px;">You may close this window.</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Invalid Token -->
+    <template id="scoring_invalid" name="Invalid Token">
+        <t t-call="web.layout">
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460);font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:#fff;border-radius:20px;padding:50px 40px;text-align:center;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width:72px;height:72px;background:#e74c3c;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;">&#10005;</div>
+                    <h2 style="color:#1a1a2e;font-size:22px;margin-bottom:10px;">Invalid Link</h2>
+                    <p style="color:#555;font-size:14px;">This scoring link is invalid or has expired. Please contact HR for a new link.</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Session Closed -->
+    <template id="scoring_session_closed" name="Session Closed">
+        <t t-call="web.layout">
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460);font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:#fff;border-radius:20px;padding:50px 40px;text-align:center;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width:72px;height:72px;background:#95a5a6;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:#fff;">&#128274;</div>
+                    <h2 style="color:#1a1a2e;font-size:22px;margin-bottom:10px;">Session Closed</h2>
+                    <p style="color:#555;font-size:14px;">This interview scoring session is no longer accepting responses.</p>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="comment_form" name="Interview Comment Form">
+        <t t-call="web.layout">
+            <div style="max-width:760px;margin:0 auto;padding:24px;font-family:Arial,sans-serif;">
+                <div style="background:#7ebb0e;color:#fff;padding:18px 24px;border-radius:8px 8px 0 0;">
+                    <h2 style="margin:0;">Add Your Comments</h2>
+                    <p style="margin:6px 0 0;font-size:14px;">
+                        <t t-esc="session.name"/> &#8212; <t t-esc="token_rec.user_id.name"/>
+                    </p>
+                </div>
+                <div style="border:1px solid #e0e0e0;border-top:none;padding:20px 24px;border-radius:0 0 8px 8px;">
+                    <p style="color:#555;">You have already submitted scores for these candidates.
+                       You may add or update your comments below. Your scores are not affected.</p>
+                    <form t-attf-action="/interview/comment/#{token_rec.token}" method="post">
+                        <t t-foreach="candidates" t-as="candidate">
+                            <div style="margin:18px 0;padding:16px;border:1px solid #eee;border-radius:8px;">
+                                <div style="font-weight:600;font-size:15px;margin-bottom:8px;">
+                                    <t t-esc="candidate.candidate_id.partner_name"/>
+                                </div>
+                                <textarea t-attf-name="comment_#{candidate.id}" rows="3"
+                                          style="width:100%;padding:9px 11px;border:1px solid #ccc;border-radius:6px;font-family:inherit;font-size:14px;box-sizing:border-box;"
+                                          placeholder="Your assessment of this candidate"><t t-esc="comments.get(candidate.id, '')"/></textarea>
+                            </div>
+                        </t>
+                        <button type="submit"
+                                style="background:#f28617;color:#fff;border:none;padding:12px 26px;border-radius:6px;font-size:15px;font-weight:600;cursor:pointer;">
+                            Save Comments
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="comment_thank_you" name="Comment Thank You">
+        <t t-call="web.layout">
+            <div style="max-width:560px;margin:60px auto;padding:36px;text-align:center;font-family:Arial,sans-serif;border:1px solid #e0e0e0;border-radius:10px;">
+                <div style="font-size:44px;color:#7ebb0e;">&#10003;</div>
+                <h2 style="color:#1c2126;">Comments Saved</h2>
+                <p style="color:#555;">Thank you, <t t-esc="panelist"/>. Your comments have been recorded.</p>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend Survey Question Form — add CPS scoring + knockout inline -->
+    <record id="survey_question_form_cps_ext" model="ir.ui.view">
+        <field name="name">survey.question.form.cps.ext</field>
+        <field name="model">survey.question</field>
+        <field name="inherit_id" ref="survey.survey_question_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add knockout columns to inline answer list -->
+            <xpath expr="//field[@name='suggested_answer_ids']//list//field[@name='value_image']" position="after">
+                <field name="cps_is_knockout" string="Knockout"
+                       column_invisible="parent.question_type == 'matrix'"/>
+                <field name="cps_knockout_reason" string="Knockout Reason"
+                       column_invisible="parent.question_type == 'matrix'"
+                       optional="show"/>
+            </xpath>
+
+            <!-- Add CPS scoring configuration section -->
+            <xpath expr="//sheet" position="inside">
+                <group string="CPS Scoring Configuration" name="cps_scoring_config">
+                    <group string="Auto Scoring">
+                        <field name="cps_max_score"
+                               help="Maximum score cap for multi-select questions. 0 = no cap."/>
+                    </group>
+                    <group string="Manual Scoring">
+                        <field name="cps_is_manual"/>
+                        <field name="cps_manual_max"
+                               invisible="not cps_is_manual"
+                               help="Maximum marks HR can award for this question."/>
+                        <field name="cps_scoring_guide"
+                               invisible="not cps_is_manual"
+                               placeholder="e.g. No examples=0 | 1-3 orgs=4 | 4-7 orgs=7 | 8-10 orgs=10"/>
+                    </group>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Extend Survey Answer Form — add knockout fields -->
+    <record id="survey_answer_form_cps_ext" model="ir.ui.view">
+        <field name="name">survey.answer.form.cps.ext</field>
+        <field name="model">survey.question.answer</field>
+        <field name="inherit_id" ref="survey.survey_question_answer_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="CPS Knockout Configuration">
+                    <field name="cps_is_knockout"/>
+                    <field name="cps_knockout_reason"
+                           invisible="not cps_is_knockout"
+                           placeholder="e.g. Less than 5 years experience — minimum requirement not met"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend Survey Answer List view — add knockout columns -->
+    <record id="survey_answer_list_cps_ext" model="ir.ui.view">
+        <field name="name">survey.answer.list.cps.ext</field>
+        <field name="model">survey.question.answer</field>
+        <field name="inherit_id" ref="survey.survey_question_answer_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="cps_is_knockout" string="Knockout" optional="show"/>
+                <field name="cps_knockout_reason" string="Knockout Reason" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

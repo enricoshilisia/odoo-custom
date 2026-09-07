@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="email_template_candidate_form" model="mail.template">
+        <field name="name">Candidate Post-Interview Form</field>
+        <field name="model_id" ref="model_cps_candidate_token"/>
+        <field name="subject">{{ object.session_id.job_id.name }} - Please Complete Your Post-Interview Form</field>
+        <field name="email_to">{{ object.applicant_id.email_from }}</field>
+        <field name="body_html" type="html">
+            <div style="margin:0px;padding:0px;font-size:13px;font-family:'Segoe UI',Arial,sans-serif;">
+                <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:24px 32px;border-radius:8px 8px 0 0;">
+                    <h2 style="color:#fff;margin:0;font-size:18px;">Post-Interview Form</h2>
+                    <p style="color:rgba(255,255,255,0.65);margin:4px 0 0;font-size:12px;">
+                        <t t-out="object.session_id.job_id.name"/>
+                    </p>
+                </div>
+                <div style="background:#fff;padding:24px 32px;border-radius:0 0 8px 8px;border:1px solid #eee;">
+                    <p>Dear <strong><t t-out="object.applicant_id.partner_name"/></strong>,</p>
+                    <p>Thank you for attending the interview for the <strong><t t-out="object.session_id.job_id.name"/></strong> position.</p>
+                    <p>Please take a few minutes to complete the short post-interview form below. It includes:</p>
+                    <ul style="color:#555;line-height:2;">
+                        <li>Uploading your passport photo</li>
+                        <li>Your availability to start work</li>
+                        <li>A quick rating of our hiring process</li>
+                    </ul>
+                    <div style="text-align:center;margin:28px 0;">
+                        <a t-att-href="object.form_url"
+                           style="background:linear-gradient(135deg,#27ae60,#2ecc71);color:#ffffff;padding:14px 36px;border-radius:10px;text-decoration:none;font-size:15px;font-weight:bold;display:inline-block;">
+                            Complete My Form
+                        </a>
+                    </div>
+                    <p style="color:#e74c3c;font-size:12px;">This link is personal to you. Please do not share it.</p>
+                    <hr style="border:none;border-top:1px solid #eee;margin:20px 0;"/>
+                    <p style="color:#888;font-size:12px;">Regards,<br/><strong>HR Team</strong></p>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

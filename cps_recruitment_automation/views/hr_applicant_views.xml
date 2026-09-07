@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_applicant_view_form_cps" model="ir.ui.view">
+        <field name="name">hr.applicant.form.cps.scoring</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="CPS Assessment Scoring" name="cps_scoring_group"
+                       invisible="cps_survey_state == 'not_sent'">
+
+                    <group string="Score Summary">
+                        <field name="cps_survey_state" readonly="1"/>
+                        <field name="cps_auto_score" readonly="1"/>
+                        <field name="cps_total_score" readonly="1"/>
+                        <field name="cps_score_recommendation" readonly="1"/>
+                        <field name="cps_scored_by" readonly="1"/>
+                        <field name="cps_scored_date" readonly="1"/>
+                    </group>
+
+                    <group string="Manual Scoring — HR Only"
+                           invisible="cps_survey_state not in ['in_progress','passed','failed']">
+
+                        <!-- Q3 -->
+                        <separator string="Q3: CIO/CTO Level Engagement — Max 10 Marks"/>
+                        <field name="cps_q3_response" readonly="1" nolabel="1"
+                               widget="text"
+                               placeholder="Candidate response will appear here..."/>
+                        <field name="cps_q3_score"
+                               help="No examples = 0 | 1–3 Orgs = 4 | 4–7 Orgs = 7 | 8–10 Orgs = 10. Maximum: 10"/>
+
+                        <!-- Q11 -->
+                        <separator string="Q11: CRM &amp; Sales Enablement Tools — Max 5 Marks"/>
+                        <field name="cps_q11_response" readonly="1" nolabel="1"
+                               widget="text"
+                               placeholder="Candidate response will appear here..."/>
+                        <field name="cps_q11_score"
+                               help="Dynamics/Salesforce/HubSpot/Zoho/Odoo = 5 | Other CRM = 3 | None = 0. Maximum: 5"/>
+
+                        <!-- Q12 -->
+                        <separator string="Q12: ICT Sales Lifecycle Understanding — Max 10 Marks"/>
+                        <field name="cps_q12_response" readonly="1" nolabel="1"
+                               widget="text"
+                               placeholder="Candidate response will appear here..."/>
+                        <field name="cps_q12_score"
+                               help="Excellent (all 8 stages) = 10 | Good with minor gaps = 7 | Basic = 4 | Poor = 0. Minimum 5 required. Maximum: 10"/>
+
+                    </group>
+
+                    <div invisible="cps_survey_state not in ['in_progress', 'passed']">
+                        <button name="action_cps_finalize_score"
+                                string="Finalize Assessment Score"
+                                type="object"
+                                class="btn-primary"
+                                confirm="Confirm you have reviewed and scored Q3, Q11 and Q12. This will move the applicant to the appropriate stage."/>
+                    </div>
+
+                    <group string="Survey Responses">
+                        <field name="cps_survey_input_ids" nolabel="1">
+                            <list string="Survey Responses">
+                                <field name="survey_id"/>
+                                <field name="state"/>
+                                <field name="scoring_percentage" string="Odoo Score %"/>
+                                <field name="create_date" string="Submitted"/>
+                            </list>
+                        </field>
+                    </group>
+
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Screening Report List View -->
+    <record id="hr_applicant_screening_report_list" model="ir.ui.view">
+        <field name="name">hr.applicant.screening.report.list</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <list string="Screening Report" default_order="cps_total_score desc">
+                <field name="candidate_id" string="Candidate"/>
+                <field name="stage_id" string="Stage"/>
+                <field name="cps_survey_state" string="Survey Status"/>
+                <field name="cps_auto_score" string="Auto (/75)"/>
+                <field name="cps_q3_score" string="Q3 (/10)"/>
+                <field name="cps_q11_score" string="Q11 (/5)"/>
+                <field name="cps_q12_score" string="Q12 (/10)"/>
+                <field name="cps_total_score" string="Total (/100)"/>
+                <field name="cps_score_recommendation" string="Recommendation"/>
+                <field name="cps_scored_by" string="Scored By"/>
+                <field name="cps_scored_date" string="Scored On"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Screening Report Pivot View -->
+    <record id="hr_applicant_screening_report_pivot" model="ir.ui.view">
+        <field name="name">hr.applicant.screening.report.pivot</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <pivot string="Screening Report">
+                <field name="candidate_id" type="row"/>
+                <field name="cps_auto_score" type="measure"/>
+                <field name="cps_q3_score" type="measure"/>
+                <field name="cps_q11_score" type="measure"/>
+                <field name="cps_q12_score" type="measure"/>
+                <field name="cps_total_score" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Screening Report Search View -->
+    <record id="hr_applicant_screening_report_search" model="ir.ui.view">
+        <field name="name">hr.applicant.screening.report.search</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <search string="Screening Report">
+                <field name="candidate_id" string="Candidate"/>
+                <filter string="Passed" name="passed"
+                        domain="[('cps_survey_state','=','passed')]"/>
+                <filter string="Failed" name="failed"
+                        domain="[('cps_survey_state','=','failed')]"/>
+                <filter string="Pending Manual" name="pending"
+                        domain="[('cps_survey_state','=','in_progress')]"/>
+                <filter string="Not Yet Scored" name="not_scored"
+                        domain="[('cps_survey_state','in',['sent','not_sent'])]"/>
+                <separator/>
+                <filter string="Score ≥ 70" name="score_pass"
+                        domain="[('cps_total_score','>=',70)]"/>
+                <filter string="Score &lt; 70" name="score_fail"
+                        domain="[('cps_total_score','&lt;',70),('cps_total_score','&gt;',0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Stage" name="group_stage"
+                            context="{'group_by': 'stage_id'}"/>
+                    <filter string="Survey Status" name="group_status"
+                            context="{'group_by': 'cps_survey_state'}"/>
+                    <filter string="Recommendation" name="group_rec"
+                            context="{'group_by': 'cps_score_recommendation'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_cps_screening_report" model="ir.actions.act_window">
+        <field name="name">Screening Report — Multi-Cloud &amp; AI Sales Executive</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="domain">[('job_id.name', 'ilike', 'Multi-Cloud')]</field>
+        <field name="context">{'search_default_group_stage': 0}</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('hr_applicant_screening_report_list')}),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('hr_applicant_screening_report_pivot')}),
+        ]"/>
+        <field name="search_view_id" ref="hr_applicant_screening_report_search"/>
+    </record>
+
+    <!-- Menu item under Recruitment -->
+    <menuitem id="menu_cps_screening_report"
+              name="Screening Report"
+              parent="hr_recruitment.menu_hr_recruitment_root"
+              action="action_cps_screening_report"
+              sequence="20"/>
+
+
+    <!-- Screening Report List View -->
+    <record id="hr_applicant_screening_report_list" model="ir.ui.view">
+        <field name="name">hr.applicant.screening.report.list</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <list string="Screening Report" default_order="cps_total_score desc">
+                <field name="candidate_id" string="Candidate"/>
+                <field name="stage_id" string="Stage"/>
+                <field name="cps_survey_state" string="Survey Status"/>
+                <field name="cps_auto_score" string="Auto (/75)"/>
+                <field name="cps_q3_score" string="Q3 (/10)"/>
+                <field name="cps_q11_score" string="Q11 (/5)"/>
+                <field name="cps_q12_score" string="Q12 (/10)"/>
+                <field name="cps_total_score" string="Total (/100)"/>
+                <field name="cps_score_recommendation" string="Recommendation"/>
+                <field name="cps_scored_by" string="Scored By"/>
+                <field name="cps_scored_date" string="Scored On"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Screening Report Pivot View -->
+    <record id="hr_applicant_screening_report_pivot" model="ir.ui.view">
+        <field name="name">hr.applicant.screening.report.pivot</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <pivot string="Screening Report">
+                <field name="candidate_id" type="row"/>
+                <field name="cps_auto_score" type="measure"/>
+                <field name="cps_q3_score" type="measure"/>
+                <field name="cps_q11_score" type="measure"/>
+                <field name="cps_q12_score" type="measure"/>
+                <field name="cps_total_score" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Screening Report Search View -->
+    <record id="hr_applicant_screening_report_search" model="ir.ui.view">
+        <field name="name">hr.applicant.screening.report.search</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <search string="Screening Report">
+                <field name="candidate_id" string="Candidate"/>
+                <filter string="Passed" name="passed"
+                        domain="[('cps_survey_state','=','passed')]"/>
+                <filter string="Failed" name="failed"
+                        domain="[('cps_survey_state','=','failed')]"/>
+                <filter string="Pending Manual" name="pending"
+                        domain="[('cps_survey_state','=','in_progress')]"/>
+                <filter string="Not Yet Scored" name="not_scored"
+                        domain="[('cps_survey_state','in',['sent','not_sent'])]"/>
+                <separator/>
+                <filter string="Score >= 70" name="score_pass"
+                        domain="[('cps_total_score','>=',70)]"/>
+                <filter string="Score &lt; 70" name="score_fail"
+                        domain="[('cps_total_score','&lt;',70),('cps_total_score','&gt;',0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Stage" name="group_stage"
+                            context="{'group_by': 'stage_id'}"/>
+                    <filter string="Survey Status" name="group_status"
+                            context="{'group_by': 'cps_survey_state'}"/>
+                    <filter string="Recommendation" name="group_rec"
+                            context="{'group_by': 'cps_score_recommendation'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_cps_screening_report" model="ir.actions.act_window">
+        <field name="name">Screening Report — Multi-Cloud &amp; AI Sales Executive</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="domain">[('job_id.name', 'ilike', 'Multi-Cloud')]</field>
+        <field name="context">{'search_default_group_stage': 0}</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('hr_applicant_screening_report_list')}),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('hr_applicant_screening_report_pivot')}),
+        ]"/>
+        <field name="search_view_id" ref="hr_applicant_screening_report_search"/>
+    </record>
+
+    <!-- Menu item under Recruitment -->
+    <menuitem id="menu_cps_screening_report"
+              name="Screening Report"
+              parent="hr_recruitment.menu_hr_recruitment_root"
+              action="action_cps_screening_report"
+              sequence="20"/>
+
+
+
+    <!-- Download button on Job Position form -->
+
+
+
+
+
+
+    <record id="hr_job_view_form_cps_report" model="ir.ui.view">
+        <field name="name">hr.job.form.cps.report</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[1]" position="before">
+                <button string="Download Screening Report"
+                        type="object"
+                        name="action_cps_download_screening_report"
+                        class="btn-secondary"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

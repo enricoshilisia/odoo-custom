@@ -1,0 +1,20 @@
+{
+    'name': 'CPS Recruitment Automation',
+    'version': '1.2',
+    'category': 'Recruitment',
+    'summary': 'Automates survey-based recruitment with configurable scoring engine',
+    'author': 'Cloud Productivity Solutions',
+    'license': 'LGPL-3',
+    'depends': ['hr_recruitment', 'survey'],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/mail_template.xml',
+        'views/hr_job_views.xml',
+        'views/hr_applicant_views.xml',
+        'views/survey_question_ext_views.xml',
+        'views/cps_score_bracket_views.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

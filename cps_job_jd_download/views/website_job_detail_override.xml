@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cps_job_detail_jd_button"
+              name="CPS: JD Download Button on Job Page"
+              inherit_id="website_hr_recruitment.detail">
+
+        <!-- Remove top Apply Now button, replace with Download JD only -->
+        <xpath expr="//div[@class='col-md-3']//div[@class='text-center']" position="replace">
+            <div class="text-center d-flex flex-column gap-2">
+                <br/>
+                <a t-if="job.jd_pdf"
+                   t-attf-href="/jobs/#{job.id}/jd"
+                   class="btn btn-outline-secondary btn-lg"
+                   target="_blank">
+                    <i class="fa fa-download me-2"/>Download JD
+                </a>
+            </div>
+        </xpath>
+
+        <!-- Keep Apply Now only at the bottom bar, add Download JD beside it -->
+        <xpath expr="//section[hasclass('o_job_bottom_bar')]//div[@class='text-center']"
+               position="replace">
+            <div class="text-center d-flex justify-content-center gap-3">
+                <a t-if="job.jd_pdf"
+                   t-attf-href="/jobs/#{job.id}/jd"
+                   class="btn btn-outline-secondary btn-lg"
+                   target="_blank">
+                    <i class="fa fa-download me-2"/>Download JD
+                </a>
+                <a role="button"
+                   t-attf-href="/jobs/apply/#{slug(job)}"
+                   class="btn btn-primary btn-lg">
+                    Apply Now!
+                </a>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>
