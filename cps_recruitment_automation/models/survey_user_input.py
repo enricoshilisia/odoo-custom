@@ -179,7 +179,7 @@ class SurveyUserInput(models.Model):
 
         _logger.info(
             'CPS Reusable: %s | Auto: %s | Manual max pending: %s | Knockouts: %s',
-            applicant.candidate_id.partner_name, total_auto, manual_max, knockouts
+            applicant.partner_name, total_auto, manual_max, knockouts
         )
 
         # Handle knockouts
@@ -274,7 +274,7 @@ class SurveyUserInput(models.Model):
 
         _logger.info(
             'CPS Reusable: %s → bracket "%s" stage "%s"',
-            applicant.candidate_id.partner_name,
+            applicant.partner_name,
             bracket.label, bracket.stage_id.name
         )
 
@@ -301,7 +301,7 @@ class SurveyUserInput(models.Model):
             applicant, total_auto, knockouts, breakdown, '')
         _logger.info(
             'CPS Reusable: %s DISQUALIFIED. %s',
-            applicant.candidate_id.partner_name, ' | '.join(knockouts)
+            applicant.partner_name, ' | '.join(knockouts)
         )
 
     def _cps_reusable_breakdown_html(self, breakdown, total_auto, note, color, status):
@@ -358,7 +358,7 @@ class SurveyUserInput(models.Model):
         bd_html = self._cps_reusable_breakdown_html(
             breakdown, total_auto, '', color, status)
 
-        candidates_name = applicant.candidate_id.partner_name or 'N/A'
+        candidates_name = applicant.partner_name or 'N/A'
         subject = f"{status} — {candidates_name} | {applicant.job_id.name}"
 
         body = (
@@ -404,7 +404,7 @@ class SurveyUserInput(models.Model):
 
         _logger.info(
             'CPS Legacy: %s | Auto: %s/75 | Knockouts: %s',
-            applicant.candidate_id.partner_name, total_auto, knockouts
+            applicant.partner_name, total_auto, knockouts
         )
 
         if knockouts:
@@ -573,12 +573,12 @@ class SurveyUserInput(models.Model):
         ko_section = (f'<h4 style="color:#d9534f;">Knockout Reasons:</h4>'
                       f'<ul>{ko_html}</ul>') if ko_html else ''
         bd_html = self._cps_build_breakdown_html(breakdown, total_auto)
-        candidate_name = applicant.candidate_id.partner_name or 'N/A'
+        candidate_name = applicant.partner_name or 'N/A'
         subject = f"{status} — {candidate_name} | {applicant.job_id.name}"
         body = (f'<div style="font-family:Arial,sans-serif;font-size:14px;color:#333;">'
                 f'<h2 style="color:{color};">{status}</h2>'
                 f'<p><strong>Candidate:</strong> {candidate_name}<br/>'
-                f'<strong>Email:</strong> {applicant.candidate_id.email_from}<br/>'
+                f'<strong>Email:</strong> {applicant.email_from}<br/>'
                 f'<strong>Job:</strong> {applicant.job_id.name}<br/>'
                 f'<strong>Auto Score:</strong> {total_auto}/75</p>'
                 f'{ko_section}<p>{note}</p>{bd_html}'
@@ -630,13 +630,13 @@ class SurveyUserInput(models.Model):
                 '<li>Q12: ICT Sales Lifecycle — 10 marks</li>'
             )
 
-        candidate_name = applicant.candidate_id.partner_name or 'N/A'
+        candidate_name = applicant.partner_name or 'N/A'
         subject = (f"Manual Review Required — {candidate_name} "
                    f"| {applicant.job_id.name}")
         body = (f'<div style="font-family:Arial,sans-serif;font-size:14px;color:#333;">'
                 f'<h2 style="color:#f0ad4e;">&#9203; Manual Review Required</h2>'
                 f'<p><strong>Candidate:</strong> {candidate_name}<br/>'
-                f'<strong>Email:</strong> {applicant.candidate_id.email_from}<br/>'
+                f'<strong>Email:</strong> {applicant.email_from}<br/>'
                 f'<strong>Job:</strong> {applicant.job_id.name}</p>'
                 f'<p><strong>Questions to score:</strong></p>'
                 f'<ul>{manual_items}</ul>'

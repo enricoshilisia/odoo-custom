@@ -78,7 +78,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <list string="Screening Report" default_order="cps_total_score desc">
-                <field name="candidate_id" string="Candidate"/>
+                <field name="partner_name" string="Candidate"/>
                 <field name="stage_id" string="Stage"/>
                 <field name="cps_survey_state" string="Survey Status"/>
                 <field name="cps_auto_score" string="Auto (/75)"/>
@@ -99,7 +99,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <pivot string="Screening Report">
-                <field name="candidate_id" type="row"/>
+                <field name="partner_name" type="row"/>
                 <field name="cps_auto_score" type="measure"/>
                 <field name="cps_q3_score" type="measure"/>
                 <field name="cps_q11_score" type="measure"/>
@@ -115,7 +115,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <search string="Screening Report">
-                <field name="candidate_id" string="Candidate"/>
+                <field name="partner_name" string="Candidate"/>
                 <filter string="Passed" name="passed"
                         domain="[('cps_survey_state','=','passed')]"/>
                 <filter string="Failed" name="failed"
@@ -170,7 +170,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <list string="Screening Report" default_order="cps_total_score desc">
-                <field name="candidate_id" string="Candidate"/>
+                <field name="partner_name" string="Candidate"/>
                 <field name="stage_id" string="Stage"/>
                 <field name="cps_survey_state" string="Survey Status"/>
                 <field name="cps_auto_score" string="Auto (/75)"/>
@@ -191,7 +191,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <pivot string="Screening Report">
-                <field name="candidate_id" type="row"/>
+                <field name="partner_name" type="row"/>
                 <field name="cps_auto_score" type="measure"/>
                 <field name="cps_q3_score" type="measure"/>
                 <field name="cps_q11_score" type="measure"/>
@@ -207,7 +207,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <search string="Screening Report">
-                <field name="candidate_id" string="Candidate"/>
+                <field name="partner_name" string="Candidate"/>
                 <filter string="Passed" name="passed"
                         domain="[('cps_survey_state','=','passed')]"/>
                 <filter string="Failed" name="failed"

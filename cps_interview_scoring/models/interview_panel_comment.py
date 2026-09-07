@@ -21,10 +21,10 @@ class CpsInterviewPanelComment(models.Model):
     )
     comment = fields.Text(string='Comment')
 
-    _sql_constraints = [
-        ('uniq_comment', 'unique(session_id, applicant_id, user_id)',
-         'This panelist already has a comment for this candidate.'),
-    ]
+    _uniq_comment = models.Constraint(
+        'unique(session_id, applicant_id, user_id)',
+        'This panelist already has a comment for this candidate.',
+    )
 
 
 class CpsInterviewSessionPanelComment(models.Model):

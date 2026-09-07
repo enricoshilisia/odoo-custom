@@ -362,7 +362,7 @@ class CpsInterviewSlot(models.Model):
     session_applicant_ids = fields.Many2many(
         related='schedule_id.session_id.applicant_ids')
     candidate_name = fields.Char(
-        related='applicant_id.candidate_id.partner_name', string='Name')
+        related='applicant_id.partner_name', string='Name')
     candidate_email = fields.Char(
         related='applicant_id.email_from', string='Email')
     candidate_score = fields.Integer(string='Score', compute='_compute_score', store=True)

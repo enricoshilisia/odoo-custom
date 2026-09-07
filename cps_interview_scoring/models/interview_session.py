@@ -104,7 +104,7 @@ class CpsInterviewSession(models.Model):
                 bg = '#fdecea' if r['flag'] else ('#f7f9fa' if i % 2 else '#fff')
                 html.append('<tr style="background:%s;border-bottom:1px solid #e6eaed;">' % bg)
                 html.append('<td style="padding:6px 8px;">%d</td>' % i)
-                name = r['applicant'].candidate_id.partner_name or '?'
+                name = r['applicant'].partner_name or '?'
                 flag = ' <span style="color:#d9534f;font-weight:bold;">&#9888; review</span>' if r['flag'] else ''
                 html.append('<td style="padding:6px 8px;">%s%s</td>' % (name, flag))
                 for t in panelists:
@@ -121,7 +121,7 @@ class CpsInterviewSession(models.Model):
             html.append('<h3 style="margin:14px 0 8px;">Panelist Breakdown by Question</h3>')
             for r in cand_rows:
                 a = r['applicant']
-                name = a.candidate_id.partner_name or '?'
+                name = a.partner_name or '?'
                 border = '2px solid #d9534f' if r['flag'] else '1px solid #e6eaed'
                 head_bg = '#fdecea' if r['flag'] else '#f7f9fa'
                 banner = ''
@@ -388,7 +388,7 @@ class CpsInterviewSessionMultiDay(models.Model):
                     'final_decision': dict(ev._fields['final_decision'].selection).get(ev.final_decision, '') if ev.final_decision else '',
                 }
             candidates.append({
-                'name': a.candidate_id.partner_name or '?',
+                'name': a.partner_name or '?',
                 'auto_score': getattr(a, 'cps_auto_score', 0),
                 'per_panelist': per,
                 'avg': avg,

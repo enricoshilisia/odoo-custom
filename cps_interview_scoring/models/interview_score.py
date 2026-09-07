@@ -50,7 +50,7 @@ class CpsInterviewScore(models.Model):
             cands = {}
             for r in recs:
                 key = (r.token_id.user_id.name or '?',
-                       r.applicant_id.candidate_id.partner_name or '?')
+                       r.applicant_id.partner_name or '?')
                 cands[key] = cands.get(key, 0) + 1
             lines = ''.join(
                 '<li>%s — %s (%d score rows)</li>' % (p, c, n)

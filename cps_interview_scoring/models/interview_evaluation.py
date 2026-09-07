@@ -16,7 +16,7 @@ class CpsInterviewEvaluation(models.Model):
         required=True, tracking=True,
     )
     candidate_name = fields.Char(
-        related='applicant_id.candidate_id.partner_name',
+        related='applicant_id.partner_name',
         string='Candidate Name', store=True,
     )
 
@@ -41,10 +41,10 @@ class CpsInterviewEvaluation(models.Model):
     decision_date = fields.Date(string='Decision Date', tracking=True)
     decided_by = fields.Many2one('res.users', string='Decided By', tracking=True)
 
-    _sql_constraints = [
-        ('uniq_eval', 'unique(session_id, applicant_id)',
-         'An evaluation already exists for this candidate in this session.'),
-    ]
+    _uniq_eval = models.Constraint(
+        'unique(session_id, applicant_id)',
+        'An evaluation already exists for this candidate in this session.',
+    )
 
 
 class CpsInterviewSessionEvaluation(models.Model):

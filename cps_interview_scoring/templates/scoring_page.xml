@@ -709,7 +709,7 @@
                         <t t-foreach="candidates" t-as="candidate">
                             <div style="margin:18px 0;padding:16px;border:1px solid #eee;border-radius:8px;">
                                 <div style="font-weight:600;font-size:15px;margin-bottom:8px;">
-                                    <t t-esc="candidate.candidate_id.partner_name"/>
+                                    <t t-esc="candidate.partner_name"/>
                                 </div>
                                 <textarea t-attf-name="comment_#{candidate.id}" rows="3"
                                           style="width:100%;padding:9px 11px;border:1px solid #ccc;border-radius:6px;font-family:inherit;font-size:14px;box-sizing:border-box;"
