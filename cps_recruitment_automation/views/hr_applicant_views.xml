@@ -129,7 +129,7 @@
                         domain="[('cps_total_score','>=',70)]"/>
                 <filter string="Score &lt; 70" name="score_fail"
                         domain="[('cps_total_score','&lt;',70),('cps_total_score','&gt;',0)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Stage" name="group_stage"
                             context="{'group_by': 'stage_id'}"/>
                     <filter string="Survey Status" name="group_status"
@@ -221,7 +221,7 @@
                         domain="[('cps_total_score','>=',70)]"/>
                 <filter string="Score &lt; 70" name="score_fail"
                         domain="[('cps_total_score','&lt;',70),('cps_total_score','&gt;',0)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Stage" name="group_stage"
                             context="{'group_by': 'stage_id'}"/>
                     <filter string="Survey Status" name="group_status"

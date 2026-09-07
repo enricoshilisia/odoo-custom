@@ -229,7 +229,7 @@
                 <filter string="Completed" name="completed" domain="[('state','=','completed')]"/>
                 <filter string="Has Overdue Tasks" name="overdue"
                         domain="[('overdue_tasks','&gt;',0)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Department" name="grp_dept"
                             context="{'group_by':'department_id'}"/>
                     <filter string="Job Position" name="grp_job"
@@ -358,7 +358,7 @@
                         domain="[('state','=','overdue')]"/>
                 <filter string="Active Plans Only" name="active_plans"
                         domain="[('plan_id.state','=','active')]"/>
-                <group expand="1" string="Group By">
+                <group>
                     <filter string="Phase" name="grp_phase"
                             context="{'group_by':'phase'}"/>
                     <filter string="Plan" name="grp_plan"

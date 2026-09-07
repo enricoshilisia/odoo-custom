@@ -218,7 +218,7 @@
                 <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
                 <filter string="Open" name="open" domain="[('state','=','open')]"/>
                 <filter string="Closed" name="closed" domain="[('state','=','closed')]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Job Position" name="group_job" context="{'group_by':'job_id'}"/>
                     <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
                 </group>

@@ -94,7 +94,7 @@
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <filter string="Active" name="active" domain="[('active','=',True)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Job Position" name="grp_job" context="{'group_by':'job_id'}"/>
                     <filter string="Department" name="grp_dept" context="{'group_by':'department_id'}"/>
                 </group>
